@@ -128,19 +128,17 @@ class _SplashScreenState extends State<SplashScreen>
                                 );
                               },
                             ),
-                            Center(
-                              child: SvgPicture.asset(
-                                'assets/images/logo.svg',
-                                width: 110,
-                                height: 110,
                             Container(
                               width: 160,
                               height: 160,
                               alignment: Alignment.center,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
                               child: SvgPicture.asset(
-                                'assets/images/recycling-symbol-svgrepo-com.svg',
-                                width: 98,
-                                height: 98,
+                                'assets/images/logo.svg',
+                                width: 110,
+                                height: 110,
                               ),
                             ),
                           ],

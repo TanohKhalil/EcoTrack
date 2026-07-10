@@ -50,6 +50,7 @@ class _CarteScreenState extends State<CarteScreen> {
     final position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
+    if (!mounted) return;
     setState(() {
       _currentLocation = LatLng(position.latitude, position.longitude);
     });

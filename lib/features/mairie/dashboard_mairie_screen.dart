@@ -4,8 +4,10 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 import '../../core/widgets/toast.dart';
 import '../../core/constants/mock_data.dart';
+import '../carte/carte_preview.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
+
 class DashboardMairieScreen extends StatelessWidget {
   const DashboardMairieScreen({super.key});
 
@@ -31,7 +33,10 @@ class DashboardMairieScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconBtn(
-                    onTap: traceCallback("dashboard_mairie_screen.dart:33:onTap", () => context.pop()),
+                    onTap: traceCallback(
+                      "dashboard_mairie_screen.dart:33:onTap",
+                      () => context.pop(),
+                    ),
                     icon: Icons.arrow_back_ios_new,
                   ),
                   Container(
@@ -116,43 +121,10 @@ class DashboardMairieScreen extends StatelessWidget {
                 color: AppTheme.blue,
               ),
               const SizedBox(height: 11),
-              GestureDetector(
-                onTap: traceCallback("dashboard_mairie_screen.dart:119:onTap", () => context.push('/carte')),
-                child: Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                    color: cardColor,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: blueColor.withValues(alpha: 0.22),
-                    ),
-                  ),
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: CustomPaint(
-                          painter: GridPainter(
-                            blueColor.withValues(alpha: 0.06),
-                          ),
-                        ),
-                      ),
-                      Positioned(top: 30, left: 35, child: _buildDangerPin()),
-                      Positioned(top: 56, left: 64, child: _buildDangerPin()),
-                      Positioned(
-                        bottom: 10,
-                        left: 12,
-                        child: Text(
-                          'Imagerie Sentinel-2 · caméras terrain',
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                            color: textColor.withValues(alpha: 0.65),
-                            fontFamily: 'Space Grotesk',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+              CartePreview(
+                onTap: traceCallback(
+                  "dashboard_mairie_screen.dart:119:onTap",
+                  () => context.push('/carte'),
                 ),
               ),
               const SizedBox(height: 22),
@@ -168,7 +140,10 @@ class DashboardMairieScreen extends StatelessWidget {
               _buildQuartierStat(context, 'Treichville', 41),
               const SizedBox(height: 22),
               OutlinedButton(
-                onPressed: traceCallback("dashboard_mairie_screen.dart:170:onPressed", () => context.push('/impact_carbone')),
+                onPressed: traceCallback(
+                  "dashboard_mairie_screen.dart:170:onPressed",
+                  () => context.push('/impact_carbone'),
+                ),
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),
                   side: BorderSide(color: blueColor.withValues(alpha: 0.35)),
@@ -238,30 +213,6 @@ class DashboardMairieScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildDangerPin() {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
-          width: 34,
-          height: 34,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: AppTheme.danger.withValues(alpha: 0.5)),
-          ),
-        ),
-        Container(
-          width: 13,
-          height: 13,
-          decoration: const BoxDecoration(
-            color: AppTheme.danger,
-            shape: BoxShape.circle,
-          ),
-        ),
-      ],
     );
   }
 
