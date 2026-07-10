@@ -44,6 +44,8 @@ class MockData {
     CollectPoint(
       nom: 'Bac communautaire — Rue 12',
       categorie: WasteCategory.organique,
+      latitude: 5.3132,
+      longitude: -4.0194,
       distanceKm: 0.9,
       remplissageIoTPct: 42,
       horaires: '6h – 19h',
@@ -55,6 +57,8 @@ class MockData {
     CollectPoint(
       nom: 'Point plastique — Cité SOGEFIHA',
       categorie: WasteCategory.plastique,
+      latitude: 5.3160,
+      longitude: -4.0055,
       distanceKm: 1.4,
       remplissageIoTPct: 63,
       horaires: '24h/24',
@@ -66,6 +70,8 @@ class MockData {
     CollectPoint(
       nom: 'Marché de Koumassi',
       categorie: WasteCategory.organique,
+      latitude: 5.3348,
+      longitude: -3.9814,
       distanceKm: 2.3,
       remplissageIoTPct: 91,
       horaires: '5h – 20h',
@@ -77,6 +83,8 @@ class MockData {
     CollectPoint(
       nom: 'Point verre / métal — Marcory Résidentiel',
       categorie: WasteCategory.metalVerre,
+      latitude: 5.3101,
+      longitude: -4.0027,
       distanceKm: 2.7,
       remplissageIoTPct: 55,
       horaires: '6h – 21h',

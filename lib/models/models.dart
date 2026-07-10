@@ -8,7 +8,7 @@ enum WasteCategory {
   metalVerre,
   dangereux,
   eWaste,
-  carton
+  carton,
 }
 
 @immutable
@@ -63,6 +63,8 @@ class WasteScanResult {
 class CollectPoint {
   final String nom;
   final WasteCategory categorie;
+  final double latitude;
+  final double longitude;
   final double distanceKm;
   final int remplissageIoTPct;
   final String horaires;
@@ -74,6 +76,8 @@ class CollectPoint {
   const CollectPoint({
     required this.nom,
     required this.categorie,
+    required this.latitude,
+    required this.longitude,
     required this.distanceKm,
     required this.remplissageIoTPct,
     required this.horaires,
@@ -109,11 +113,7 @@ class SignalementEtape {
   final DateTime date;
   final String? agent;
 
-  const SignalementEtape({
-    required this.titre,
-    required this.date,
-    this.agent,
-  });
+  const SignalementEtape({required this.titre, required this.date, this.agent});
 }
 
 @immutable
