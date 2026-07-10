@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
+import '../../core/widgets/toast.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class MdpOublieScreen extends StatelessWidget {
   const MdpOublieScreen({super.key});
 
@@ -23,7 +25,7 @@ class MdpOublieScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: () => context.pop(),
+                onTap: traceCallback("mdp_oublie_screen.dart:27:onTap", () => context.pop()),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 26),
@@ -56,9 +58,7 @@ class MdpOublieScreen extends StatelessWidget {
               TextField(
                 decoration: InputDecoration(
                   hintText: '07 00 00 00 00 ou aya@exemple.ci',
-                  hintStyle: TextStyle(
-                    color: textColor.withValues(alpha: 0.5),
-                  ),
+                  hintStyle: TextStyle(color: textColor.withValues(alpha: 0.5)),
                   filled: true,
                   fillColor: cardColor,
                   border: OutlineInputBorder(
@@ -77,8 +77,10 @@ class MdpOublieScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(13),
                     borderSide: BorderSide(color: accentColor),
                   ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 15,
+                  ),
                 ),
                 style: TextStyle(
                   fontSize: 14,
@@ -92,7 +94,7 @@ class MdpOublieScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // showToast(context, 'Code envoyé');
+                    showToast(context, 'Code envoyé');
                     context.push('/mdp_reset');
                   },
                   child: const Text('Envoyer le code'),
@@ -112,7 +114,7 @@ class MdpOublieScreen extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => context.push('/connexion'),
+                    onTap: traceCallback("mdp_oublie_screen.dart:116:onTap", () => context.push('/connexion')),
                     child: Text(
                       'Se connecter',
                       style: TextStyle(

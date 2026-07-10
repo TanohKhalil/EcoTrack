@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class AssistantVocalScreen extends StatefulWidget {
   const AssistantVocalScreen({super.key});
 
@@ -76,7 +77,7 @@ class _AssistantVocalScreenState extends State<AssistantVocalScreen>
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: IconBtn(
-                      onTap: () => context.pop(),
+                      onTap: traceCallback("assistant_vocal_screen.dart:79:onTap", () => context.pop()),
                       icon: Icons.close,
                       color: textColor,
                     ),
@@ -214,7 +215,7 @@ class _AssistantVocalScreenState extends State<AssistantVocalScreen>
                         ),
                         const SizedBox(height: 30),
                         OutlinedButton(
-                          onPressed: () => context.push('/signalement'),
+                          onPressed: traceCallback("assistant_vocal_screen.dart:217:onPressed", () => context.push('/signalement')),
                           style: OutlinedButton.styleFrom(
                             minimumSize: const Size(220, 48),
                           ),

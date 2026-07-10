@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/theme/app_theme.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -173,10 +176,16 @@ class _SplashScreenState extends State<SplashScreen>
                                   ),
                                 ],
                               ),
-                              child: Icon(
-                                Icons.delete_outline_rounded,
-                                size: 42,
-                                color: iconColor,
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  'assets/images/recycling-symbol-svgrepo-com.svg',
+                                  width: 42,
+                                  height: 42,
+                                  colorFilter: ColorFilter.mode(
+                                    iconColor,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -231,7 +240,10 @@ class _SplashScreenState extends State<SplashScreen>
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () => context.push('/inscription'),
+                      onPressed: traceCallback(
+                        "splash_screen.dart:234:onPressed",
+                        () => context.push('/inscription'),
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: accentColor,
                         foregroundColor: buttonForegroundColor,
@@ -259,7 +271,10 @@ class _SplashScreenState extends State<SplashScreen>
                         style: TextStyle(fontSize: 14, color: subtitleColor),
                       ),
                       GestureDetector(
-                        onTap: () => context.push('/connexion'),
+                        onTap: traceCallback(
+                          "splash_screen.dart:262:onTap",
+                          () => context.push('/connexion'),
+                        ),
                         child: Text(
                           'Se connecter',
                           style: TextStyle(

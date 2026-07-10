@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class ResultatScreen extends StatelessWidget {
   const ResultatScreen({super.key});
 
@@ -44,7 +45,7 @@ class ResultatScreen extends StatelessWidget {
                       top: 8,
                       left: 22,
                       child: IconBtn(
-                        onTap: () => context.pop(),
+                        onTap: traceCallback("resultat_screen.dart:47:onTap", () => context.pop()),
                         icon: Icons.arrow_back_ios_new,
                         color: textColor,
                       ),
@@ -196,7 +197,7 @@ class ResultatScreen extends StatelessWidget {
                     const Eyebrow(text: 'POINT DE DÉPÔT LE PLUS PROCHE'),
                     const SizedBox(height: 11),
                     GestureDetector(
-                      onTap: () => context.push('/carte'),
+                      onTap: traceCallback("resultat_screen.dart:199:onTap", () => context.push('/carte')),
                       child: Container(
                         padding: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
@@ -320,14 +321,14 @@ class ResultatScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: OutlinedButton(
-                            onPressed: () => context.push('/signalement'),
+                            onPressed: traceCallback("resultat_screen.dart:323:onPressed", () => context.push('/signalement')),
                             child: const Text('Signaler un dépôt'),
                           ),
                         ),
                         const SizedBox(width: 11),
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () => context.push('/accueil_menage'),
+                            onPressed: traceCallback("resultat_screen.dart:330:onPressed", () => context.push('/accueil_menage')),
                             child: const Text('Terminer'),
                           ),
                         ),
@@ -335,7 +336,7 @@ class ResultatScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 14),
                     GestureDetector(
-                      onTap: () => context.push('/vote_communautaire'),
+                      onTap: traceCallback("resultat_screen.dart:338:onTap", () => context.push('/vote_communautaire')),
                       child: Center(
                         child: Text(
                           'Classification incorrecte ? Aider à corriger',

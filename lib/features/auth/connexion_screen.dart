@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class ConnexionScreen extends StatelessWidget {
   const ConnexionScreen({super.key});
 
@@ -24,7 +25,7 @@ class ConnexionScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: () => context.pop(),
+                onTap: traceCallback("connexion_screen.dart:27:onTap", () => context.pop()),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 44),
@@ -136,7 +137,7 @@ class ConnexionScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
-                  onTap: () => context.push('/mdp_oublie'),
+                  onTap: traceCallback("connexion_screen.dart:139:onTap", () => context.push('/mdp_oublie')),
                   child: Text(
                     'Mot de passe oublié ?',
                     style: TextStyle(
@@ -152,7 +153,7 @@ class ConnexionScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => context.push('/accueil_menage'),
+                  onPressed: traceCallback("connexion_screen.dart:155:onPressed", () => context.push('/accueil_menage')),
                   child: const Text('Se connecter →'),
                 ),
               ),
@@ -170,7 +171,7 @@ class ConnexionScreen extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => context.push('/inscription'),
+                    onTap: traceCallback("connexion_screen.dart:173:onTap", () => context.push('/inscription')),
                     child: Text(
                       'S\'inscrire',
                       style: TextStyle(

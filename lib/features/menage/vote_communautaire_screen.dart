@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class VoteCommunautaireScreen extends StatefulWidget {
   const VoteCommunautaireScreen({super.key});
 
@@ -32,7 +33,7 @@ class _VoteCommunautaireScreenState extends State<VoteCommunautaireScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: () => context.pop(),
+                onTap: traceCallback("vote_communautaire_screen.dart:35:onTap", () => context.pop()),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 22),
@@ -88,7 +89,7 @@ class _VoteCommunautaireScreenState extends State<VoteCommunautaireScreen> {
                 ),
               const Spacer(),
               OutlinedButton(
-                onPressed: () => context.pop(),
+                onPressed: traceCallback("vote_communautaire_screen.dart:91:onPressed", () => context.pop()),
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),
                 ),

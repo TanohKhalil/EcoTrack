@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class TutorielScreen extends StatelessWidget {
   const TutorielScreen({super.key});
 
@@ -71,13 +72,13 @@ class TutorielScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => context.push('/accueil_menage'),
+                  onPressed: traceCallback("tutoriel_screen.dart:74:onPressed", () => context.push('/accueil_menage')),
                   child: const Text('Commencer'),
                 ),
               ),
               const SizedBox(height: 14),
               GestureDetector(
-                onTap: () => context.push('/accueil_menage'),
+                onTap: traceCallback("tutoriel_screen.dart:80:onTap", () => context.push('/accueil_menage')),
                 child: Center(
                   child: Text(
                     'Passer',

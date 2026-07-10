@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class ScannerScreen extends StatelessWidget {
   const ScannerScreen({super.key});
 
@@ -55,7 +56,7 @@ class ScannerScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconBtn(
-                  onTap: () => context.pop(),
+                  onTap: traceCallback("scanner_screen.dart:58:onTap", () => context.pop()),
                   icon: Icons.close,
                   color: textColor,
                 ),
@@ -94,7 +95,7 @@ class ScannerScreen extends StatelessWidget {
                   ),
                 ),
                 IconBtn(
-                  onTap: () => context.push('/assistant_vocal'),
+                  onTap: traceCallback("scanner_screen.dart:97:onTap", () => context.push('/assistant_vocal')),
                   icon: Icons.mic_none_outlined,
                   color: accentColor,
                 ),
@@ -257,7 +258,7 @@ class ScannerScreen extends StatelessWidget {
                       },
                     ),
                     GestureDetector(
-                      onTap: () => context.push('/analyse'),
+                      onTap: traceCallback("scanner_screen.dart:260:onTap", () => context.push('/analyse')),
                       child: Container(
                         width: 80,
                         height: 80,
@@ -289,13 +290,13 @@ class ScannerScreen extends StatelessWidget {
                     _buildControlButton(
                       context,
                       icon: Icons.map_outlined,
-                      onTap: () => context.push('/carte'),
+                      onTap: traceCallback("scanner_screen.dart:292:onTap", () => context.push('/carte')),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 GestureDetector(
-                  onTap: () => context.push('/erreur_camera'),
+                  onTap: traceCallback("scanner_screen.dart:298:onTap", () => context.push('/erreur_camera')),
                   child: Text(
                     'Problème avec la caméra ?',
                     style: TextStyle(

@@ -129,15 +129,15 @@ class AppTheme {
 // de façon minimale et compatible avec `withOpacity`.
 extension ColorWithValues on Color {
   Color withValues({double? alpha, int? red, int? green, int? blue}) {
-    final a = alpha ?? (this.alpha / 255.0);
-    if (red != null || green != null || blue != null) {
-      return Color.fromRGBO(
-        red ?? this.red,
-        green ?? this.green,
-        blue ?? this.blue,
-        a.clamp(0.0, 1.0),
-      );
-    }
-    return withValues(alpha: a.clamp(0.0, 1.0));
+    final double opacityValue = alpha ?? (a.toDouble() / 255.0);
+    final int redValue = red ?? r.toInt();
+    final int greenValue = green ?? g.toInt();
+    final int blueValue = blue ?? b.toInt();
+    return Color.fromARGB(
+      (opacityValue.clamp(0.0, 1.0) * 255).round().clamp(0, 255),
+      redValue,
+      greenValue,
+      blueValue,
+    );
   }
 }

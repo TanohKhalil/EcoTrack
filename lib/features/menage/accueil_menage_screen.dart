@@ -4,8 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/botton_nav.dart';
 import '../../core/widgets/widgets.dart';
+import '../../core/widgets/toast.dart';
 import '../../core/constants/mock_data.dart';
 import '../../providers/theme_provider.dart';
+
+import 'package:ecotrack/core/utils/trace.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class AccueilMenageScreen extends ConsumerStatefulWidget {
   const AccueilMenageScreen({super.key});
@@ -69,10 +73,16 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
                                 color: accentColor,
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: const Icon(
-                                Icons.delete_outline_rounded,
-                                color: AppTheme.accentInk,
-                                size: 17,
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  'assets/images/recycling-symbol-svgrepo-com.svg',
+                                  width: 17,
+                                  height: 17,
+                                  colorFilter: const ColorFilter.mode(
+                                    AppTheme.accentInk,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -95,7 +105,10 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
                               clipBehavior: Clip.none,
                               children: [
                                 IconBtn(
-                                  onTap: () => context.push('/notifications'),
+                                  onTap: traceCallback(
+                                    "accueil_menage_screen.dart:99:onTap",
+                                    () => context.push('/notifications'),
+                                  ),
                                   icon: Icons.notifications_outlined,
                                   color: textColor,
                                 ),
@@ -121,7 +134,10 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
                             ),
                             const SizedBox(width: 9),
                             IconBtn(
-                              onTap: () => context.push('/profil'),
+                              onTap: traceCallback(
+                                "accueil_menage_screen.dart:125:onTap",
+                                () => context.push('/profil'),
+                              ),
                               icon: Icons.person_outline,
                               color: textColor,
                             ),
@@ -151,7 +167,10 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
                     const SizedBox(height: 20),
                     // Scanner hero
                     GestureDetector(
-                      onTap: () => context.push('/scanner'),
+                      onTap: traceCallback(
+                        "accueil_menage_screen.dart:155:onTap",
+                        () => context.push('/scanner'),
+                      ),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(22),
@@ -281,7 +300,10 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
                     const SizedBox(height: 16),
                     // Signalement button
                     GestureDetector(
-                      onTap: () => context.push('/signalement'),
+                      onTap: traceCallback(
+                        "accueil_menage_screen.dart:285:onTap",
+                        () => context.push('/signalement'),
+                      ),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 15,
@@ -396,7 +418,10 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
                               '38 kg',
                               'triés / mois',
                               textColor,
-                              onTap: () => context.push('/historique'),
+                              onTap: traceCallback(
+                                "accueil_menage_screen.dart:400:onTap",
+                                () => context.push('/historique'),
+                              ),
                             ),
                             const SizedBox(width: 9),
                             _buildStatCard('6', 'collectes', textColor),
@@ -419,7 +444,10 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
                           ),
                         ),
                         GestureDetector(
-                          onTap: () => context.push('/carte'),
+                          onTap: traceCallback(
+                            "accueil_menage_screen.dart:423:onTap",
+                            () => context.push('/carte'),
+                          ),
                           child: Text(
                             'Carte →',
                             style: TextStyle(
@@ -638,7 +666,10 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
 
     return GestureDetector(
       onTap: () {
-        // showToast(context, 'Récompense « $title » échangée contre $points points');
+        showToast(
+          context,
+          'Récompense « $title » échangée contre $points points',
+        );
       },
       child: Container(
         width: 150,

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
+import '../../core/widgets/toast.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class LangueScreen extends StatefulWidget {
   const LangueScreen({super.key});
 
@@ -30,7 +32,7 @@ class _LangueScreenState extends State<LangueScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: () => context.pop(),
+                onTap: traceCallback("langue_screen.dart:34:onTap", () => context.pop()),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 22),
@@ -73,7 +75,7 @@ class _LangueScreenState extends State<LangueScreen> {
     return GestureDetector(
       onTap: () {
         setState(() => _selected = name);
-        // showToast(context, 'Langue : $name');
+        showToast(context, 'Langue : $name');
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
@@ -99,11 +101,7 @@ class _LangueScreenState extends State<LangueScreen> {
               ),
             ),
             if (isSelected)
-              const Icon(
-                Icons.check,
-                color: AppTheme.accent,
-                size: 15,
-              ),
+              const Icon(Icons.check, color: AppTheme.accent, size: 15),
           ],
         ),
       ),

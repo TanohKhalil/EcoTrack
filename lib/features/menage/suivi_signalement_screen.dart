@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class SuiviSignalementScreen extends StatelessWidget {
   const SuiviSignalementScreen({super.key});
 
@@ -23,7 +24,7 @@ class SuiviSignalementScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: () => context.pop(),
+                onTap: traceCallback("suivi_signalement_screen.dart:26:onTap", () => context.pop()),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 22),

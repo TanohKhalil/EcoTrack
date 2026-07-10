@@ -5,6 +5,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 import '../../providers/cart_provider.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class PanierScreen extends ConsumerWidget {
   const PanierScreen({super.key});
 
@@ -29,7 +30,7 @@ class PanierScreen extends ConsumerWidget {
               Row(
                 children: [
                   IconBtn(
-                    onTap: () => context.pop(),
+                    onTap: traceCallback("panier_screen.dart:32:onTap", () => context.pop()),
                     icon: Icons.arrow_back_ios_new,
                   ),
                   const SizedBox(width: 12),

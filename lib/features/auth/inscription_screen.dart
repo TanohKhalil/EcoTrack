@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
+import '../../core/widgets/toast.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class InscriptionScreen extends StatefulWidget {
   const InscriptionScreen({super.key});
 
@@ -30,7 +32,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: () => context.pop(),
+                onTap: traceCallback("inscription_screen.dart:34:onTap", () => context.pop()),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 26),
@@ -62,7 +64,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => setState(() => _method = 'tel'),
+                      onTap: traceCallback("inscription_screen.dart:66:onTap", () => setState(() => _method = 'tel')),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 7),
                         decoration: BoxDecoration(
@@ -94,7 +96,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => setState(() => _method = 'email'),
+                      onTap: traceCallback("inscription_screen.dart:98:onTap", () => setState(() => _method = 'email')),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 7),
                         decoration: BoxDecoration(
@@ -133,7 +135,9 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 13, vertical: 15),
+                        horizontal: 13,
+                        vertical: 15,
+                      ),
                       decoration: BoxDecoration(
                         color: cardColor,
                         borderRadius: BorderRadius.circular(13),
@@ -220,7 +224,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        // showToast(context, 'Nouveau code envoyé par SMS');
+                        showToast(context, 'Nouveau code envoyé par SMS');
                       },
                       child: Text(
                         'Renvoyer',
@@ -276,8 +280,10 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                 ),
                 const SizedBox(height: 18),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 12,
+                  ),
                   decoration: BoxDecoration(
                     color: accentColor.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(13),
@@ -304,9 +310,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                 obscureText: true,
                 decoration: InputDecoration(
                   hintText: '••••••••',
-                  hintStyle: TextStyle(
-                    color: textColor.withValues(alpha: 0.5),
-                  ),
+                  hintStyle: TextStyle(color: textColor.withValues(alpha: 0.5)),
                   filled: true,
                   fillColor: cardColor,
                   border: OutlineInputBorder(
@@ -341,7 +345,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => context.push('/infos_perso'),
+                  onPressed: traceCallback("inscription_screen.dart:347:onPressed", () => context.push('/infos_perso')),
                   child: const Text('Vérifier et continuer →'),
                 ),
               ),
@@ -359,7 +363,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => context.push('/connexion'),
+                    onTap: traceCallback("inscription_screen.dart:365:onTap", () => context.push('/connexion')),
                     child: Text(
                       'Se connecter',
                       style: TextStyle(

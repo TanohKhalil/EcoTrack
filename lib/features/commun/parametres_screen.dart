@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
+import '../../core/widgets/toast.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class ParametresScreen extends StatefulWidget {
   const ParametresScreen({super.key});
 
@@ -33,7 +35,7 @@ class _ParametresScreenState extends State<ParametresScreen> {
               Row(
                 children: [
                   IconBtn(
-                    onTap: () => context.pop(),
+                    onTap: traceCallback("parametres_screen.dart:37:onTap", () => context.pop()),
                     icon: Icons.arrow_back_ios_new,
                   ),
                   const SizedBox(width: 12),
@@ -85,11 +87,17 @@ class _ParametresScreenState extends State<ParametresScreen> {
                 () => context.push('/langue'),
               ),
               const SizedBox(height: 9),
-              _buildSwitchItem('Notifications push', _notifications,
-                  (v) => setState(() => _notifications = v)),
+              _buildSwitchItem(
+                'Notifications push',
+                _notifications,
+                (v) => setState(() => _notifications = v),
+              ),
               const SizedBox(height: 9),
-              _buildSwitchItem('Mode hors-ligne', _offline,
-                  (v) => setState(() => _offline = v)),
+              _buildSwitchItem(
+                'Mode hors-ligne',
+                _offline,
+                (v) => setState(() => _offline = v),
+              ),
               const SizedBox(height: 22),
               const Eyebrow(text: 'SUPPORT'),
               const SizedBox(height: 10),
@@ -109,7 +117,7 @@ class _ParametresScreenState extends State<ParametresScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // showToast(context, 'Paramètres enregistrés');
+                    showToast(context, 'Paramètres enregistrés');
                   },
                   child: const Text('Enregistrer'),
                 ),
@@ -131,15 +139,11 @@ class _ParametresScreenState extends State<ParametresScreen> {
       fillColor: cardColor,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(
-          color: accentColor.withValues(alpha: 0.16),
-        ),
+        borderSide: BorderSide(color: accentColor.withValues(alpha: 0.16)),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(
-          color: accentColor.withValues(alpha: 0.16),
-        ),
+        borderSide: BorderSide(color: accentColor.withValues(alpha: 0.16)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -173,9 +177,7 @@ class _ParametresScreenState extends State<ParametresScreen> {
         decoration: BoxDecoration(
           color: cardColor,
           borderRadius: BorderRadius.circular(13),
-          border: Border.all(
-            color: AppTheme.accent.withValues(alpha: 0.14),
-          ),
+          border: Border.all(color: AppTheme.accent.withValues(alpha: 0.14)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -215,9 +217,7 @@ class _ParametresScreenState extends State<ParametresScreen> {
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(13),
-        border: Border.all(
-          color: AppTheme.accent.withValues(alpha: 0.14),
-        ),
+        border: Border.all(color: AppTheme.accent.withValues(alpha: 0.14)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -232,7 +232,7 @@ class _ParametresScreenState extends State<ParametresScreen> {
             ),
           ),
           GestureDetector(
-            onTap: () => onChanged(!value),
+            onTap: traceCallback("parametres_screen.dart:234:onTap", () => onChanged(!value)),
             child: Container(
               width: 40,
               height: 22,

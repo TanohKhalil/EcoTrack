@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
+import '../../core/widgets/toast.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
 
@@ -36,7 +38,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   Row(
                     children: [
                       IconBtn(
-                        onTap: () => context.pop(),
+                        onTap: traceCallback("notifications_screen.dart:40:onTap", () => context.pop()),
                         icon: Icons.arrow_back_ios_new,
                       ),
                       const SizedBox(width: 12),
@@ -54,7 +56,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   GestureDetector(
                     onTap: () {
                       setState(() => _allRead = true);
-                      // showToast(context, 'Toutes les notifications sont marquées comme lues');
+                      showToast(
+                        context,
+                        'Toutes les notifications sont marquées comme lues',
+                      );
                     },
                     child: Text(
                       'Tout marquer lu',
@@ -84,7 +89,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               ),
               const SizedBox(height: 10),
               GestureDetector(
-                onTap: () => context.push('/suivi_signalement'),
+                onTap: traceCallback("notifications_screen.dart:91:onTap", () => context.push('/suivi_signalement')),
                 child: _buildNotification(
                   'Votre signalement a été traité',
                   'Hier, 17:40',
@@ -100,7 +105,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   Widget _buildNotification(
-      String title, String time, Color dotColor, bool read) {
+    String title,
+    String time,
+    Color dotColor,
+    bool read,
+  ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDark ? AppTheme.text : AppTheme.textLight;
     final cardColor = isDark ? AppTheme.card : AppTheme.cardLight;
@@ -110,9 +119,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-          color: dotColor.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: dotColor.withValues(alpha: 0.2)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

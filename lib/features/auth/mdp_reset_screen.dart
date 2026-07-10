@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
+import '../../core/widgets/toast.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class MdpResetScreen extends StatelessWidget {
   const MdpResetScreen({super.key});
 
@@ -23,7 +25,7 @@ class MdpResetScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: () => context.pop(),
+                onTap: traceCallback("mdp_reset_screen.dart:27:onTap", () => context.pop()),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 26),
@@ -67,7 +69,7 @@ class MdpResetScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // showToast(context, 'Nouveau code envoyé');
+                      showToast(context, 'Nouveau code envoyé');
                     },
                     child: Text(
                       'Renvoyer',
@@ -101,7 +103,7 @@ class MdpResetScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => context.push('/mdp_confirmation'),
+                  onPressed: traceCallback("mdp_reset_screen.dart:105:onPressed", () => context.push('/mdp_confirmation')),
                   child: const Text('Réinitialiser le mot de passe'),
                 ),
               ),
@@ -152,22 +154,16 @@ class MdpResetScreen extends StatelessWidget {
 
     return InputDecoration(
       hintText: hint,
-      hintStyle: TextStyle(
-        color: AppTheme.text.withValues(alpha: 0.5),
-      ),
+      hintStyle: TextStyle(color: AppTheme.text.withValues(alpha: 0.5)),
       filled: true,
       fillColor: cardColor,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(13),
-        borderSide: BorderSide(
-          color: accentColor.withValues(alpha: 0.16),
-        ),
+        borderSide: BorderSide(color: accentColor.withValues(alpha: 0.16)),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(13),
-        borderSide: BorderSide(
-          color: accentColor.withValues(alpha: 0.16),
-        ),
+        borderSide: BorderSide(color: accentColor.withValues(alpha: 0.16)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(13),

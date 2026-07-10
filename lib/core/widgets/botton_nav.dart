@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_theme.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class BottomNav extends ConsumerWidget {
   final int currentIndex;
   final Function(int) onTap;
@@ -74,7 +75,7 @@ class BottomNav extends ConsumerWidget {
               : AppTheme.textLight.withValues(alpha: 0.7));
 
     return GestureDetector(
-      onTap: () => onTap(index),
+      onTap: traceCallback("botton_nav.dart:77:onTap", () => onTap(index)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

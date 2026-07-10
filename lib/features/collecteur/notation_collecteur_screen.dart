@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
+import '../../core/widgets/toast.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class NotationCollecteurScreen extends StatefulWidget {
   const NotationCollecteurScreen({super.key});
 
@@ -34,7 +36,7 @@ class _NotationCollecteurScreenState extends State<NotationCollecteurScreen> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: IconBtn(
-                  onTap: () => context.pop(),
+                  onTap: traceCallback("notation_collecteur_screen.dart:38:onTap", () => context.pop()),
                   icon: Icons.arrow_back_ios_new,
                 ),
               ),
@@ -75,7 +77,7 @@ class _NotationCollecteurScreenState extends State<NotationCollecteurScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(5, (index) {
                   return GestureDetector(
-                    onTap: () => setState(() => _rating = index + 1),
+                    onTap: traceCallback("notation_collecteur_screen.dart:79:onTap", () => setState(() => _rating = index + 1)),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 4),
                       child: Text(
@@ -97,9 +99,7 @@ class _NotationCollecteurScreenState extends State<NotationCollecteurScreen> {
                 maxLines: 3,
                 decoration: InputDecoration(
                   hintText: 'Un commentaire ? (optionnel)',
-                  hintStyle: TextStyle(
-                    color: textColor.withValues(alpha: 0.5),
-                  ),
+                  hintStyle: TextStyle(color: textColor.withValues(alpha: 0.5)),
                   filled: true,
                   fillColor: cardColor,
                   border: OutlineInputBorder(
@@ -132,7 +132,7 @@ class _NotationCollecteurScreenState extends State<NotationCollecteurScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // showToast(context, 'Merci pour votre évaluation !');
+                    showToast(context, 'Merci pour votre évaluation !');
                     context.pop();
                   },
                   child: const Text('Envoyer la note'),

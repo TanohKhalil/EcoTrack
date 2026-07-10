@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class PaiementCommandeScreen extends StatefulWidget {
   const PaiementCommandeScreen({super.key});
 
@@ -30,7 +31,7 @@ class _PaiementCommandeScreenState extends State<PaiementCommandeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: () => context.pop(),
+                onTap: traceCallback("paiement_commande_screen.dart:33:onTap", () => context.pop()),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 22),
@@ -53,7 +54,7 @@ class _PaiementCommandeScreenState extends State<PaiementCommandeScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => context.push('/confirmation_commande'),
+                  onPressed: traceCallback("paiement_commande_screen.dart:56:onPressed", () => context.push('/confirmation_commande')),
                   child: const Text('Confirmer la commande'),
                 ),
               ),
@@ -73,7 +74,7 @@ class _PaiementCommandeScreenState extends State<PaiementCommandeScreen> {
     final isSelected = _selectedMethod == value;
 
     return GestureDetector(
-      onTap: () => setState(() => _selectedMethod = value),
+      onTap: traceCallback("paiement_commande_screen.dart:76:onTap", () => setState(() => _selectedMethod = value)),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
         decoration: BoxDecoration(

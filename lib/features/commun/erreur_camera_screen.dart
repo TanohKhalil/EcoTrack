@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class ErreurCameraScreen extends StatelessWidget {
   const ErreurCameraScreen({super.key});
 
@@ -62,7 +63,7 @@ class ErreurCameraScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => context.push('/scanner'),
+                  onPressed: traceCallback("erreur_camera_screen.dart:65:onPressed", () => context.push('/scanner')),
                   child: const Text('Réessayer'),
                 ),
               ),

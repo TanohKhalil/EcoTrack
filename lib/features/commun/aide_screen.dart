@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/toast.dart';
 import '../../core/widgets/widgets.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class AideScreen extends StatelessWidget {
   const AideScreen({super.key});
 
@@ -25,7 +27,7 @@ class AideScreen extends StatelessWidget {
               Row(
                 children: [
                   IconBtn(
-                    onTap: () => context.pop(),
+                    onTap: traceCallback("aide_screen.dart:29:onTap", () => context.pop()),
                     icon: Icons.arrow_back_ios_new,
                   ),
                   const SizedBox(width: 12),
@@ -67,9 +69,7 @@ class AideScreen extends StatelessWidget {
                 maxLines: 4,
                 decoration: InputDecoration(
                   hintText: 'Décrivez votre problème…',
-                  hintStyle: TextStyle(
-                    color: textColor.withValues(alpha: 0.5),
-                  ),
+                  hintStyle: TextStyle(color: textColor.withValues(alpha: 0.5)),
                   filled: true,
                   fillColor: cardColor,
                   border: OutlineInputBorder(
@@ -102,7 +102,7 @@ class AideScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // showToast(context, 'Message envoyé au support EcoTrack');
+                    showToast(context, 'Message envoyé au support EcoTrack');
                   },
                   child: const Text('Envoyer'),
                 ),
@@ -124,9 +124,7 @@ class AideScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(13),
-        border: Border.all(
-          color: AppTheme.accent.withValues(alpha: 0.14),
-        ),
+        border: Border.all(color: AppTheme.accent.withValues(alpha: 0.14)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

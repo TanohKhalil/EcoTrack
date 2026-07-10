@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
+import '../../core/widgets/toast.dart';
 import '../../core/constants/mock_data.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class ImpactCarboneScreen extends StatelessWidget {
   const ImpactCarboneScreen({super.key});
 
@@ -25,7 +27,7 @@ class ImpactCarboneScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: () => context.pop(),
+                onTap: traceCallback("impact_carbone_screen.dart:29:onTap", () => context.pop()),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 22),
@@ -91,7 +93,9 @@ class ImpactCarboneScreen extends StatelessWidget {
                       angle: 0.08,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
                         decoration: BoxDecoration(
                           color: textColor,
                           borderRadius: BorderRadius.circular(7),
@@ -120,11 +124,17 @@ class ImpactCarboneScreen extends StatelessWidget {
               const SizedBox(height: 22),
               const Eyebrow(text: 'ÉQUIVALENCE'),
               const SizedBox(height: 11),
-              _buildEquivalence(context, '🌳',
-                  '≈ ${MockData.impact.equivalentArbres} arbres plantés sur un an'),
+              _buildEquivalence(
+                context,
+                '🌳',
+                '≈ ${MockData.impact.equivalentArbres} arbres plantés sur un an',
+              ),
               const SizedBox(height: 9),
-              _buildEquivalence(context, '🚗',
-                  '≈ ${MockData.impact.equivalentKmVoiture.toInt()} km évités en voiture'),
+              _buildEquivalence(
+                context,
+                '🚗',
+                '≈ ${MockData.impact.equivalentKmVoiture.toInt()} km évités en voiture',
+              ),
               const SizedBox(height: 22),
               const Eyebrow(text: 'GÉNÉRATION MENSUELLE'),
               const SizedBox(height: 11),
@@ -167,9 +177,7 @@ class ImpactCarboneScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: blueColor.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: blueColor.withValues(alpha: 0.28),
-                  ),
+                  border: Border.all(color: blueColor.withValues(alpha: 0.28)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,7 +210,7 @@ class ImpactCarboneScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // showToast(context, 'Certificat carbone exporté');
+                    showToast(context, 'Certificat carbone exporté');
                   },
                   child: const Text('Exporter le certificat'),
                 ),
@@ -224,9 +232,7 @@ class ImpactCarboneScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: AppTheme.accent.withValues(alpha: 0.14),
-        ),
+        border: Border.all(color: AppTheme.accent.withValues(alpha: 0.14)),
       ),
       child: Row(
         children: [

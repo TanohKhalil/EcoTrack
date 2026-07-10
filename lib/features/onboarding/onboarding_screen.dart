@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
 
@@ -23,7 +24,7 @@ class OnboardingScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: () => context.pop(),
+                onTap: traceCallback("onboarding_screen.dart:26:onTap", () => context.pop()),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 26),
@@ -61,7 +62,7 @@ class OnboardingScreen extends StatelessWidget {
                         title: 'Ménage / Commerce',
                         subtitle: 'Je trie, signale, gagne des points',
                         color: accentColor,
-                        onTap: () => context.push('/tutoriel'),
+                        onTap: traceCallback("onboarding_screen.dart:64:onTap", () => context.push('/tutoriel')),
                       ),
                       const SizedBox(height: 12),
                       _buildRoleCard(
@@ -70,7 +71,7 @@ class OnboardingScreen extends StatelessWidget {
                         title: 'Collecteur informel',
                         subtitle: 'Charrette, moto ou à pied',
                         color: AppTheme.plastic,
-                        onTap: () => context.push('/accueil_collecteur'),
+                        onTap: traceCallback("onboarding_screen.dart:73:onTap", () => context.push('/accueil_collecteur')),
                       ),
                       const SizedBox(height: 12),
                       _buildRoleCard(
@@ -79,7 +80,7 @@ class OnboardingScreen extends StatelessWidget {
                         title: 'Filière de valorisation',
                         subtitle: 'Recycleur, compost, biogaz, e-waste',
                         color: AppTheme.organic,
-                        onTap: () => context.push('/accueil_filiere'),
+                        onTap: traceCallback("onboarding_screen.dart:82:onTap", () => context.push('/accueil_filiere')),
                       ),
                       const SizedBox(height: 12),
                       _buildRoleCard(
@@ -88,7 +89,7 @@ class OnboardingScreen extends StatelessWidget {
                         title: 'Mairie / Collectivité',
                         subtitle: 'Dashboard B2G · pilotage territorial',
                         color: AppTheme.blue,
-                        onTap: () => context.push('/dashboard_mairie'),
+                        onTap: traceCallback("onboarding_screen.dart:91:onTap", () => context.push('/dashboard_mairie')),
                       ),
                     ],
                   ),

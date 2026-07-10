@@ -4,6 +4,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 import '../../core/constants/mock_data.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class HistoriqueScreen extends StatelessWidget {
   const HistoriqueScreen({super.key});
 
@@ -27,7 +28,7 @@ class HistoriqueScreen extends StatelessWidget {
               Row(
                 children: [
                   IconBtn(
-                    onTap: () => context.pop(),
+                    onTap: traceCallback("historique_screen.dart:30:onTap", () => context.pop()),
                     icon: Icons.arrow_back_ios_new,
                   ),
                   const SizedBox(width: 12),

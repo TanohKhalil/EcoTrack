@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
+import '../../core/widgets/toast.dart';
 import '../../core/constants/mock_data.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class AccueilCollecteurScreen extends StatelessWidget {
   const AccueilCollecteurScreen({super.key});
 
@@ -29,12 +31,14 @@ class AccueilCollecteurScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconBtn(
-                    onTap: () => context.pop(),
+                    onTap: traceCallback("accueil_collecteur_screen.dart:33:onTap", () => context.pop()),
                     icon: Icons.arrow_back_ios_new,
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 13,
+                      vertical: 7,
+                    ),
                     decoration: BoxDecoration(
                       color: plasticColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
@@ -53,7 +57,7 @@ class AccueilCollecteurScreen extends StatelessWidget {
                     ),
                   ),
                   IconBtn(
-                    onTap: () => context.push('/profil'),
+                    onTap: traceCallback("accueil_collecteur_screen.dart:59:onTap", () => context.push('/profil')),
                     icon: Icons.person_outline,
                     color: textColor,
                   ),
@@ -111,8 +115,9 @@ class AccueilCollecteurScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Eyebrow(
-                            text: 'ITINÉRAIRE OPTIMISÉ · IA',
-                            color: AppTheme.plastic),
+                          text: 'ITINÉRAIRE OPTIMISÉ · IA',
+                          color: AppTheme.plastic,
+                        ),
                         Text(
                           '7 arrêts',
                           style: TextStyle(
@@ -132,7 +137,7 @@ class AccueilCollecteurScreen extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () => context.push('/carte'),
+                        onPressed: traceCallback("accueil_collecteur_screen.dart:139:onPressed", () => context.push('/carte')),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: plasticColor,
                           foregroundColor: const Color(0xFF04222E),
@@ -148,7 +153,7 @@ class AccueilCollecteurScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => context.push('/retrait_collecteur'),
+                      onTap: traceCallback("accueil_collecteur_screen.dart:155:onTap", () => context.push('/retrait_collecteur')),
                       child: Container(
                         padding: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
@@ -233,10 +238,16 @@ class AccueilCollecteurScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     _buildTrainingCard(
-                        context, 'Tri & sécurité', '6 min · vidéo'),
+                      context,
+                      'Tri & sécurité',
+                      '6 min · vidéo',
+                    ),
                     const SizedBox(width: 10),
                     _buildTrainingCard(
-                        context, 'Hygiène terrain', '4 min · vidéo'),
+                      context,
+                      'Hygiène terrain',
+                      '4 min · vidéo',
+                    ),
                   ],
                 ),
               ),
@@ -309,14 +320,17 @@ class AccueilCollecteurScreen extends StatelessWidget {
   }
 
   Widget _buildTrainingCard(
-      BuildContext context, String title, String subtitle) {
+    BuildContext context,
+    String title,
+    String subtitle,
+  ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardColor = isDark ? AppTheme.card : AppTheme.cardLight;
     final textColor = isDark ? AppTheme.text : AppTheme.textLight;
 
     return GestureDetector(
       onTap: () {
-        // showToast(context, 'Lecture de la formation : $title');
+        showToast(context, 'Lecture de la formation : $title');
       },
       child: Container(
         width: 132,
@@ -324,9 +338,7 @@ class AccueilCollecteurScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: cardColor,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: AppTheme.accent.withValues(alpha: 0.14),
-          ),
+          border: Border.all(color: AppTheme.accent.withValues(alpha: 0.14)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

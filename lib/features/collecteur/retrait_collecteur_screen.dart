@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
+import '../../core/widgets/toast.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class RetraitCollecteurScreen extends StatefulWidget {
   const RetraitCollecteurScreen({super.key});
 
@@ -31,7 +33,7 @@ class _RetraitCollecteurScreenState extends State<RetraitCollecteurScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: () => context.pop(),
+                onTap: traceCallback("retrait_collecteur_screen.dart:35:onTap", () => context.pop()),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 22),
@@ -51,17 +53,12 @@ class _RetraitCollecteurScreenState extends State<RetraitCollecteurScreen> {
                 padding: const EdgeInsets.all(22),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      accentColor.withValues(alpha: 0.16),
-                      cardColor,
-                    ],
+                    colors: [accentColor.withValues(alpha: 0.16), cardColor],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: accentColor.withValues(alpha: 0.3),
-                  ),
+                  border: Border.all(color: accentColor.withValues(alpha: 0.3)),
                 ),
                 child: Column(
                   children: [
@@ -101,9 +98,7 @@ class _RetraitCollecteurScreenState extends State<RetraitCollecteurScreen> {
               TextField(
                 decoration: InputDecoration(
                   hintText: '36 500',
-                  hintStyle: TextStyle(
-                    color: textColor.withValues(alpha: 0.5),
-                  ),
+                  hintStyle: TextStyle(color: textColor.withValues(alpha: 0.5)),
                   filled: true,
                   fillColor: cardColor,
                   border: OutlineInputBorder(
@@ -122,8 +117,10 @@ class _RetraitCollecteurScreenState extends State<RetraitCollecteurScreen> {
                     borderRadius: BorderRadius.circular(13),
                     borderSide: BorderSide(color: accentColor),
                   ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 15,
+                  ),
                 ),
                 keyboardType: TextInputType.number,
                 style: TextStyle(
@@ -138,7 +135,10 @@ class _RetraitCollecteurScreenState extends State<RetraitCollecteurScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // showToast(context, 'Retrait initié — vous recevrez un SMS de confirmation');
+                    showToast(
+                      context,
+                      'Retrait initié — vous recevrez un SMS de confirmation',
+                    );
                     context.pop();
                   },
                   child: const Text('Retirer maintenant'),
@@ -157,7 +157,7 @@ class _RetraitCollecteurScreenState extends State<RetraitCollecteurScreen> {
     final accentColor = isDark ? AppTheme.accent : AppTheme.accentLight;
 
     return GestureDetector(
-      onTap: () => setState(() => _selectedMethod = value),
+      onTap: traceCallback("retrait_collecteur_screen.dart:159:onTap", () => setState(() => _selectedMethod = value)),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
         decoration: BoxDecoration(
@@ -192,11 +192,7 @@ class _RetraitCollecteurScreenState extends State<RetraitCollecteurScreen> {
               ),
             ),
             if (_selectedMethod == value)
-              const Icon(
-                Icons.check,
-                color: AppTheme.accent,
-                size: 15,
-              ),
+              const Icon(Icons.check, color: AppTheme.accent, size: 15),
           ],
         ),
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class ConfirmationSignalementScreen extends StatelessWidget {
   const ConfirmationSignalementScreen({super.key});
 
@@ -60,7 +61,7 @@ class ConfirmationSignalementScreen extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               OutlinedButton(
-                onPressed: () => context.push('/suivi_signalement'),
+                onPressed: traceCallback("confirmation_signalement_screen.dart:63:onPressed", () => context.push('/suivi_signalement')),
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),
                 ),
@@ -70,7 +71,7 @@ class ConfirmationSignalementScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => context.push('/accueil_menage'),
+                  onPressed: traceCallback("confirmation_signalement_screen.dart:73:onPressed", () => context.push('/accueil_menage')),
                   child: const Text('Retour à l\'accueil'),
                 ),
               ),

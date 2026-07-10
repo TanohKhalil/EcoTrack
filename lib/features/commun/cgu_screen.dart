@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class CguScreen extends StatelessWidget {
   const CguScreen({super.key});
 
@@ -24,7 +25,7 @@ class CguScreen extends StatelessWidget {
               Row(
                 children: [
                   IconBtn(
-                    onTap: () => context.pop(),
+                    onTap: traceCallback("cgu_screen.dart:27:onTap", () => context.pop()),
                     icon: Icons.arrow_back_ios_new,
                   ),
                   const SizedBox(width: 12),

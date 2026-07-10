@@ -7,6 +7,7 @@ import '../../providers/theme_provider.dart';
 import '../../providers/offline_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class ProfilScreen extends ConsumerWidget {
   const ProfilScreen({super.key});
 
@@ -45,7 +46,7 @@ class ProfilScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconBtn(
-                          onTap: () => context.pop(),
+                          onTap: traceCallback("profil_screen.dart:48:onTap", () => context.pop()),
                           icon: Icons.arrow_back_ios_new,
                         ),
                         Row(
@@ -216,7 +217,7 @@ class ProfilScreen extends ConsumerWidget {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () => context.push('/impact_carbone'),
+                            onTap: traceCallback("profil_screen.dart:219:onTap", () => context.push('/impact_carbone')),
                             child: const Icon(
                               Icons.arrow_forward_ios,
                               size: 14,
@@ -228,7 +229,7 @@ class ProfilScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 24),
                     OutlinedButton(
-                      onPressed: () => context.push('/connexion'),
+                      onPressed: traceCallback("profil_screen.dart:231:onPressed", () => context.push('/connexion')),
                       style: OutlinedButton.styleFrom(
                         minimumSize: const Size(double.infinity, 48),
                       ),

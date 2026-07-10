@@ -7,17 +7,31 @@ import '../../core/widgets/toast.dart';
 import '../../core/constants/mock_data.dart';
 import '../../providers/cart_provider.dart';
 
-class MarketplaceScreen extends ConsumerWidget {
+import 'package:ecotrack/core/utils/trace.dart';
+class MarketplaceScreen extends ConsumerStatefulWidget {
   const MarketplaceScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MarketplaceScreen> createState() => _MarketplaceScreenState();
+}
+
+class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
+  String _selectedFilter = 'tous';
+
+  @override
+  Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? AppTheme.bg : AppTheme.bgLight;
     final textColor = isDark ? AppTheme.text : AppTheme.textLight;
     final accentColor = isDark ? AppTheme.accent : AppTheme.accentLight;
     final cardColor = isDark ? AppTheme.card : AppTheme.cardLight;
     final cartItems = ref.watch(cartProvider);
+    final products = MockData.produitsMarketplace
+        .where(
+          (product) =>
+              _selectedFilter == 'tous' || product.categorie == _selectedFilter,
+        )
+        .toList();
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -30,7 +44,7 @@ class MarketplaceScreen extends ConsumerWidget {
               Row(
                 children: [
                   IconBtn(
-                    onTap: () => context.pop(),
+                    onTap: traceCallback("marketplace_screen.dart:46:onTap", () => context.pop()),
                     icon: Icons.arrow_back_ios_new,
                   ),
                   const SizedBox(width: 12),
@@ -45,7 +59,7 @@ class MarketplaceScreen extends ConsumerWidget {
                   ),
                   const Spacer(),
                   GestureDetector(
-                    onTap: () => context.push('/panier'),
+                    onTap: traceCallback("marketplace_screen.dart:61:onTap", () => context.push('/panier')),
                     child: Stack(
                       children: [
                         Container(
@@ -111,7 +125,7 @@ class MarketplaceScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 18),
-              ...MockData.produitsMarketplace
+              ...products
                   .map((product) => _buildProductCard(context, product, ref))
                   .toList(),
             ],
@@ -128,15 +142,15 @@ class MarketplaceScreen extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () {
-        // Filtrer les produits
+        setState(() => _selectedFilter = value);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
         decoration: BoxDecoration(
-          color: value == 'tous' ? accentColor : Colors.transparent,
+          color: value == _selectedFilter ? accentColor : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: value == 'tous'
+            color: value == _selectedFilter
                 ? accentColor
                 : accentColor.withValues(alpha: 0.35),
           ),

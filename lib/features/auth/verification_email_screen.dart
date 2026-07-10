@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/toast.dart';
 
 class VerificationEmailScreen extends StatelessWidget {
   const VerificationEmailScreen({super.key});
@@ -63,7 +64,7 @@ class VerificationEmailScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // showToast(context, 'Email confirmé');
+                    showToast(context, 'Email confirmé');
                     context.push('/onboarding');
                   },
                   child: const Text('J\'ai confirmé, continuer'),
@@ -84,7 +85,7 @@ class VerificationEmailScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // showToast(context, 'Email renvoyé');
+                      showToast(context, 'Email renvoyé');
                     },
                     child: Text(
                       'Renvoyer le lien',

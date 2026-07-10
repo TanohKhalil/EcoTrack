@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class SignalementScreen extends StatefulWidget {
   const SignalementScreen({super.key});
 
@@ -34,11 +35,11 @@ class _SignalementScreenState extends State<SignalementScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconBtn(
-                    onTap: () => context.pop(),
+                    onTap: traceCallback("signalement_screen.dart:37:onTap", () => context.pop()),
                     icon: Icons.arrow_back_ios_new,
                   ),
                   IconBtn(
-                    onTap: () => context.push('/assistant_vocal'),
+                    onTap: traceCallback("signalement_screen.dart:41:onTap", () => context.push('/assistant_vocal')),
                     icon: Icons.mic_none_outlined,
                     color: accentColor,
                   ),
@@ -61,7 +62,7 @@ class _SignalementScreenState extends State<SignalementScreen> {
               const SizedBox(height: 20),
               // Photo area
               GestureDetector(
-                onTap: () => setState(() => _hasPhoto = !_hasPhoto),
+                onTap: traceCallback("signalement_screen.dart:64:onTap", () => setState(() => _hasPhoto = !_hasPhoto)),
                 child: Container(
                   height: 150,
                   decoration: BoxDecoration(
@@ -194,7 +195,7 @@ class _SignalementScreenState extends State<SignalementScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => context.push('/signalement_doublon'),
+                  onPressed: traceCallback("signalement_screen.dart:197:onPressed", () => context.push('/signalement_doublon')),
                   child: const Text('Envoyer le signalement'),
                 ),
               ),

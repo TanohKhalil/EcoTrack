@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/toast.dart';
 import '../../core/widgets/widgets.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class FichePointScreen extends StatelessWidget {
   const FichePointScreen({super.key});
 
@@ -23,16 +25,14 @@ class FichePointScreen extends StatelessWidget {
           children: [
             Container(
               height: 150,
-              decoration: BoxDecoration(
-                color: cardColor,
-              ),
+              decoration: BoxDecoration(color: cardColor),
               child: Stack(
                 children: [
                   Positioned(
                     top: 12,
                     left: 20,
                     child: IconBtn(
-                      onTap: () => context.pop(),
+                      onTap: traceCallback("fiche_point_screen.dart:34:onTap", () => context.pop()),
                       icon: Icons.arrow_back_ios_new,
                     ),
                   ),
@@ -71,7 +71,9 @@ class FichePointScreen extends StatelessWidget {
                     children: [
                       ChipWidget(label: 'Épluchures', color: organicColor),
                       ChipWidget(
-                          label: 'Résidus de marché', color: organicColor),
+                        label: 'Résidus de marché',
+                        color: organicColor,
+                      ),
                       ChipWidget(label: '✕ Plastique', color: textColor),
                     ],
                   ),
@@ -136,7 +138,7 @@ class FichePointScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: OutlinedButton(
-                          onPressed: () => context.push('/signalement'),
+                          onPressed: traceCallback("fiche_point_screen.dart:140:onPressed", () => context.push('/signalement')),
                           child: const Text('Signaler un problème'),
                         ),
                       ),
@@ -144,7 +146,7 @@ class FichePointScreen extends StatelessWidget {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
-                            // showToast(context, 'Itinéraire ouvert');
+                            showToast(context, 'Itinéraire ouvert');
                           },
                           child: const Text('Itinéraire'),
                         ),
@@ -171,9 +173,7 @@ class FichePointScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: cardColor,
           borderRadius: BorderRadius.circular(13),
-          border: Border.all(
-            color: AppTheme.accent.withValues(alpha: 0.14),
-          ),
+          border: Border.all(color: AppTheme.accent.withValues(alpha: 0.14)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

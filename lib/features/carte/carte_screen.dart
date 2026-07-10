@@ -5,6 +5,7 @@ import '../../core/widgets/widgets.dart';
 import '../../core/widgets/toast.dart';
 import '../../core/constants/mock_data.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class CarteScreen extends StatefulWidget {
   const CarteScreen({super.key});
 
@@ -38,7 +39,7 @@ class _CarteScreenState extends State<CarteScreen> {
               child: Row(
                 children: [
                   IconBtn(
-                    onTap: () => context.pop(),
+                    onTap: traceCallback("carte_screen.dart:41:onTap", () => context.pop()),
                     icon: Icons.arrow_back_ios_new,
                   ),
                   const SizedBox(width: 12),
@@ -228,7 +229,7 @@ class _CarteScreenState extends State<CarteScreen> {
                     left: 16,
                     bottom: 16,
                     child: ElevatedButton.icon(
-                      onPressed: () => context.push('/signalement'),
+                      onPressed: traceCallback("carte_screen.dart:231:onPressed", () => context.push('/signalement')),
                       icon: const Icon(Icons.warning_amber_rounded, size: 15),
                       label: const Text('Signaler ici'),
                       style: ElevatedButton.styleFrom(
@@ -338,7 +339,7 @@ class _CarteScreenState extends State<CarteScreen> {
 
     final isActive = _filter == value;
     return GestureDetector(
-      onTap: () => setState(() => _filter = value),
+      onTap: traceCallback("carte_screen.dart:341:onTap", () => setState(() => _filter = value)),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
         decoration: BoxDecoration(

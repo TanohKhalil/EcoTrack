@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
+import '../../core/widgets/toast.dart';
 import '../../core/constants/mock_data.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class DashboardMairieScreen extends StatelessWidget {
   const DashboardMairieScreen({super.key});
 
@@ -29,12 +31,14 @@ class DashboardMairieScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconBtn(
-                    onTap: () => context.pop(),
+                    onTap: traceCallback("dashboard_mairie_screen.dart:33:onTap", () => context.pop()),
                     icon: Icons.arrow_back_ios_new,
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 13,
+                      vertical: 7,
+                    ),
                     decoration: BoxDecoration(
                       color: blueColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
@@ -81,26 +85,39 @@ class DashboardMairieScreen extends StatelessWidget {
                   _buildStatCard(context, '63%', 'taux de collecte', blueColor),
                   const SizedBox(width: 11),
                   _buildStatCard(
-                      context, '14,2 t', 'valorisées / mois', textColor),
+                    context,
+                    '14,2 t',
+                    'valorisées / mois',
+                    textColor,
+                  ),
                 ],
               ),
               const SizedBox(height: 11),
               Row(
                 children: [
                   _buildStatCard(
-                      context, '9', 'dépôts sauvages actifs', dangerColor),
+                    context,
+                    '9',
+                    'dépôts sauvages actifs',
+                    dangerColor,
+                  ),
                   const SizedBox(width: 11),
                   _buildStatCard(
-                      context, '47', 'emplois soutenus', accentColor),
+                    context,
+                    '47',
+                    'emplois soutenus',
+                    accentColor,
+                  ),
                 ],
               ),
               const SizedBox(height: 22),
               const Eyebrow(
-                  text: 'ZONES À RISQUE DE DÉPÔT SAUVAGE',
-                  color: AppTheme.blue),
+                text: 'ZONES À RISQUE DE DÉPÔT SAUVAGE',
+                color: AppTheme.blue,
+              ),
               const SizedBox(height: 11),
               GestureDetector(
-                onTap: () => context.push('/carte'),
+                onTap: traceCallback("dashboard_mairie_screen.dart:119:onTap", () => context.push('/carte')),
                 child: Container(
                   height: 150,
                   decoration: BoxDecoration(
@@ -114,20 +131,13 @@ class DashboardMairieScreen extends StatelessWidget {
                     children: [
                       Positioned.fill(
                         child: CustomPaint(
-                          painter:
-                              GridPainter(blueColor.withValues(alpha: 0.06)),
+                          painter: GridPainter(
+                            blueColor.withValues(alpha: 0.06),
+                          ),
                         ),
                       ),
-                      Positioned(
-                        top: 30,
-                        left: 35,
-                        child: _buildDangerPin(),
-                      ),
-                      Positioned(
-                        top: 56,
-                        left: 64,
-                        child: _buildDangerPin(),
-                      ),
+                      Positioned(top: 30, left: 35, child: _buildDangerPin()),
+                      Positioned(top: 56, left: 64, child: _buildDangerPin()),
                       Positioned(
                         bottom: 10,
                         left: 12,
@@ -147,7 +157,9 @@ class DashboardMairieScreen extends StatelessWidget {
               ),
               const SizedBox(height: 22),
               const Eyebrow(
-                  text: 'STATISTIQUES PAR QUARTIER', color: AppTheme.blue),
+                text: 'STATISTIQUES PAR QUARTIER',
+                color: AppTheme.blue,
+              ),
               const SizedBox(height: 11),
               _buildQuartierStat(context, 'Marcory', 74),
               const SizedBox(height: 9),
@@ -156,7 +168,7 @@ class DashboardMairieScreen extends StatelessWidget {
               _buildQuartierStat(context, 'Treichville', 41),
               const SizedBox(height: 22),
               OutlinedButton(
-                onPressed: () => context.push('/impact_carbone'),
+                onPressed: traceCallback("dashboard_mairie_screen.dart:170:onPressed", () => context.push('/impact_carbone')),
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),
                   side: BorderSide(color: blueColor.withValues(alpha: 0.35)),
@@ -167,7 +179,7 @@ class DashboardMairieScreen extends StatelessWidget {
               const SizedBox(height: 11),
               OutlinedButton(
                 onPressed: () {
-                  // showToast(context, 'Génération du rapport PDF en cours…');
+                  showToast(context, 'Génération du rapport PDF en cours…');
                 },
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),
@@ -184,7 +196,11 @@ class DashboardMairieScreen extends StatelessWidget {
   }
 
   Widget _buildStatCard(
-      BuildContext context, String value, String label, Color valueColor) {
+    BuildContext context,
+    String value,
+    String label,
+    Color valueColor,
+  ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardColor = isDark ? AppTheme.card : AppTheme.cardLight;
     final textColor = isDark ? AppTheme.text : AppTheme.textLight;
@@ -195,9 +211,7 @@ class DashboardMairieScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: cardColor,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: valueColor.withValues(alpha: 0.24),
-          ),
+          border: Border.all(color: valueColor.withValues(alpha: 0.24)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,9 +250,7 @@ class DashboardMairieScreen extends StatelessWidget {
           height: 34,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(
-              color: AppTheme.danger.withValues(alpha: 0.5),
-            ),
+            border: Border.all(color: AppTheme.danger.withValues(alpha: 0.5)),
           ),
         ),
         Container(

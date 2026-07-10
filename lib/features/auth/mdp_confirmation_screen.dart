@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class MdpConfirmationScreen extends StatelessWidget {
   const MdpConfirmationScreen({super.key});
 
@@ -62,7 +63,7 @@ class MdpConfirmationScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => context.push('/connexion'),
+                  onPressed: traceCallback("mdp_confirmation_screen.dart:65:onPressed", () => context.push('/connexion')),
                   child: const Text('Retour à la connexion'),
                 ),
               ),

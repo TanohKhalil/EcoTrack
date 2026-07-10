@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
+import 'package:ecotrack/core/utils/trace.dart';
 class SignalementDoublonScreen extends StatelessWidget {
   const SignalementDoublonScreen({super.key});
 
@@ -23,7 +24,7 @@ class SignalementDoublonScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: () => context.pop(),
+                onTap: traceCallback("signalement_doublon_screen.dart:26:onTap", () => context.pop()),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 20),
@@ -120,7 +121,7 @@ class SignalementDoublonScreen extends StatelessWidget {
               ),
               const Spacer(),
               OutlinedButton(
-                onPressed: () => context.push('/suivi_signalement'),
+                onPressed: traceCallback("signalement_doublon_screen.dart:123:onPressed", () => context.push('/suivi_signalement')),
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),
                 ),
@@ -130,7 +131,7 @@ class SignalementDoublonScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => context.push('/confirmation_signalement'),
+                  onPressed: traceCallback("signalement_doublon_screen.dart:133:onPressed", () => context.push('/confirmation_signalement')),
                   child: const Text('Signaler quand même'),
                 ),
               ),
