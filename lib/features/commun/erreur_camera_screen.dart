@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../core/theme/app_theme.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
+
 class ErreurCameraScreen extends StatelessWidget {
   const ErreurCameraScreen({super.key});
 
@@ -63,15 +65,30 @@ class ErreurCameraScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: traceCallback("erreur_camera_screen.dart:65:onPressed", () => context.push('/scanner')),
+                  onPressed: traceCallback(
+                    "erreur_camera_screen.dart:65:onPressed",
+                    () => context.push('/scanner'),
+                  ),
                   child: const Text('Réessayer'),
                 ),
               ),
               const SizedBox(height: 11),
               OutlinedButton(
-                onPressed: () {
-                  // openGallery
-                  context.push('/analyse');
+                onPressed: () async {
+                  try {
+                    final picker = ImagePicker();
+                    final XFile? picked = await picker.pickImage(
+                      source: ImageSource.gallery,
+                      maxWidth: 1600,
+                    );
+                    if (picked != null) {
+                      if (!context.mounted) return;
+                      context.push('/analyse', extra: picked.path);
+                    }
+                  } catch (e) {
+                    if (!context.mounted) return;
+                    context.push('/scanner');
+                  }
                 },
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),

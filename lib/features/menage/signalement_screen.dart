@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/services/voice_store.dart';
 import '../../core/widgets/widgets.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
+
 class SignalementScreen extends StatefulWidget {
   const SignalementScreen({super.key});
 
@@ -13,6 +15,19 @@ class SignalementScreen extends StatefulWidget {
 
 class _SignalementScreenState extends State<SignalementScreen> {
   bool _hasPhoto = false;
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: VoiceStore.lastText);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +50,17 @@ class _SignalementScreenState extends State<SignalementScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconBtn(
-                    onTap: traceCallback("signalement_screen.dart:37:onTap", () => context.pop()),
+                    onTap: traceCallback(
+                      "signalement_screen.dart:37:onTap",
+                      () => context.pop(),
+                    ),
                     icon: Icons.arrow_back_ios_new,
                   ),
                   IconBtn(
-                    onTap: traceCallback("signalement_screen.dart:41:onTap", () => context.push('/assistant_vocal')),
+                    onTap: traceCallback(
+                      "signalement_screen.dart:41:onTap",
+                      () => context.push('/assistant_vocal'),
+                    ),
                     icon: Icons.mic_none_outlined,
                     color: accentColor,
                   ),
@@ -47,7 +68,9 @@ class _SignalementScreenState extends State<SignalementScreen> {
               ),
               const SizedBox(height: 26),
               const Eyebrow(
-                  text: 'Signalement citoyen', color: AppTheme.danger),
+                text: 'Signalement citoyen',
+                color: AppTheme.danger,
+              ),
               const SizedBox(height: 8),
               Text(
                 'Un dépôt sauvage ?',
@@ -62,7 +85,10 @@ class _SignalementScreenState extends State<SignalementScreen> {
               const SizedBox(height: 20),
               // Photo area
               GestureDetector(
-                onTap: traceCallback("signalement_screen.dart:64:onTap", () => setState(() => _hasPhoto = !_hasPhoto)),
+                onTap: traceCallback(
+                  "signalement_screen.dart:64:onTap",
+                  () => setState(() => _hasPhoto = !_hasPhoto),
+                ),
                 child: Container(
                   height: 150,
                   decoration: BoxDecoration(
@@ -125,8 +151,10 @@ class _SignalementScreenState extends State<SignalementScreen> {
               const Eyebrow(text: 'LOCALISATION'),
               const SizedBox(height: 8),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 14,
+                ),
                 decoration: BoxDecoration(
                   color: cardColor,
                   borderRadius: BorderRadius.circular(13),
@@ -158,12 +186,11 @@ class _SignalementScreenState extends State<SignalementScreen> {
               const Eyebrow(text: 'DESCRIPTION'),
               const SizedBox(height: 8),
               TextField(
+                controller: _controller,
                 maxLines: 4,
                 decoration: InputDecoration(
                   hintText: 'Type de déchets, ampleur, depuis quand…',
-                  hintStyle: TextStyle(
-                    color: textColor.withValues(alpha: 0.5),
-                  ),
+                  hintStyle: TextStyle(color: textColor.withValues(alpha: 0.5)),
                   filled: true,
                   fillColor: cardColor,
                   border: OutlineInputBorder(
@@ -195,7 +222,10 @@ class _SignalementScreenState extends State<SignalementScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: traceCallback("signalement_screen.dart:197:onPressed", () => context.push('/signalement_doublon')),
+                  onPressed: traceCallback(
+                    "signalement_screen.dart:197:onPressed",
+                    () => context.push('/signalement_doublon'),
+                  ),
                   child: const Text('Envoyer le signalement'),
                 ),
               ),

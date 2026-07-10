@@ -109,7 +109,12 @@ final appRouterProvider = Provider((ref) {
       GoRoute(
         path: '/analyse',
         name: 'analyse',
-        builder: (context, state) => const AnalyseScreen(),
+        builder: (context, state) => AnalyseScreen(
+          key: state.pageKey,
+          // state.extra may contain an image path from the scanner
+          // pass it to the screen if available
+          imagePath: state.extra is String ? state.extra as String : null,
+        ),
       ),
       GoRoute(
         path: '/resultat',

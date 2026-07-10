@@ -1,10 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
 class AnalyseScreen extends StatefulWidget {
-  const AnalyseScreen({super.key});
+  final String? imagePath;
+
+  const AnalyseScreen({super.key, this.imagePath});
 
   @override
   State<AnalyseScreen> createState() => _AnalyseScreenState();
@@ -14,8 +17,14 @@ class _AnalyseScreenState extends State<AnalyseScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) context.push('/resultat');
+    // Shorter delay if we have an imagePath (simulate faster local analysis)
+    final duration = widget.imagePath != null
+        ? const Duration(seconds: 2)
+        : const Duration(seconds: 3);
+    Future.delayed(duration, () {
+      if (!mounted) return;
+      // pass imagePath to resultat if present
+      context.push('/resultat', extra: widget.imagePath);
     });
   }
 
@@ -47,52 +56,62 @@ class _AnalyseScreenState extends State<AnalyseScreen> {
                 SizedBox(
                   width: 250,
                   height: 250,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        width: 250,
-                        height: 250,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: accentColor.withValues(alpha: 0.12),
+                  child: widget.imagePath != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(18),
+                          child: Image.file(
+                            File(widget.imagePath!),
+                            fit: BoxFit.cover,
+                            width: 250,
+                            height: 250,
                           ),
+                        )
+                      : Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              width: 250,
+                              height: 250,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: accentColor.withValues(alpha: 0.12),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 250,
+                              height: 250,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: SweepGradient(
+                                  colors: [
+                                    accentColor.withValues(alpha: 0.3),
+                                    Colors.transparent,
+                                    accentColor.withValues(alpha: 0.3),
+                                  ],
+                                  stops: const [0, 0.34, 1],
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 72,
+                              height: 72,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: accentColor.withValues(alpha: 0.6),
+                                  width: 1.5,
+                                ),
+                              ),
+                            ),
+                            const Icon(
+                              Icons.recycling,
+                              color: AppTheme.accent,
+                              size: 54,
+                            ),
+                          ],
                         ),
-                      ),
-                      Container(
-                        width: 250,
-                        height: 250,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: SweepGradient(
-                            colors: [
-                              accentColor.withValues(alpha: 0.3),
-                              Colors.transparent,
-                              accentColor.withValues(alpha: 0.3),
-                            ],
-                            stops: const [0, 0.34, 1],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: 72,
-                        height: 72,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: accentColor.withValues(alpha: 0.6),
-                            width: 1.5,
-                          ),
-                        ),
-                      ),
-                      const Icon(
-                        Icons.recycling,
-                        color: AppTheme.accent,
-                        size: 54,
-                      ),
-                    ],
-                  ),
                 ),
                 const SizedBox(height: 40),
                 SizedBox(
@@ -119,10 +138,7 @@ class _AnalyseScreenState extends State<AnalyseScreen> {
                                 color: accentColor,
                                 borderRadius: BorderRadius.circular(3),
                                 boxShadow: [
-                                  BoxShadow(
-                                    color: accentColor,
-                                    blurRadius: 4,
-                                  ),
+                                  BoxShadow(color: accentColor, blurRadius: 4),
                                 ],
                               ),
                             ),

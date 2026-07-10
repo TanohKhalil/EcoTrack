@@ -1,11 +1,22 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
-class ScannerScreen extends StatelessWidget {
+
+class ScannerScreen extends StatefulWidget {
   const ScannerScreen({super.key});
+
+  @override
+  State<ScannerScreen> createState() => _ScannerScreenState();
+}
+
+class _ScannerScreenState extends State<ScannerScreen> {
+  String _selectedCategory = 'Plastique';
+  final ImagePicker _picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +29,17 @@ class ScannerScreen extends StatelessWidget {
     final plasticColor = isDark ? AppTheme.plastic : AppTheme.plasticLight;
     final patternColorA = isDark ? AppTheme.phA : AppTheme.phALight;
     final patternColorB = isDark ? AppTheme.phB : AppTheme.phBLight;
+
+    final size = MediaQuery.of(context).size;
+    final horizontalPadding = 20.0;
+    final maxAvailableWidth = size.width - horizontalPadding * 2;
+    final scanSize = math.min(maxAvailableWidth, size.height * 0.52);
+    final bracketSize = scanSize * 0.13; // corner bracket size
+    final bracketRadius = math.max(6.0, bracketSize * 0.25);
+    final outerBorderWidth = math.max(1.0, scanSize * 0.006);
+    final innerBorderWidth = math.max(1.0, scanSize * 0.006);
+    final captureOuter = (scanSize * 0.31).clamp(56.0, 110.0);
+    final captureInner = captureOuter * 0.875;
 
     return Scaffold(
       backgroundColor: deepColor,
@@ -49,20 +71,25 @@ class ScannerScreen extends StatelessWidget {
           ),
           // Header
           Positioned(
-            top: 12,
-            left: 20,
-            right: 20,
+            top: MediaQuery.of(context).padding.top + 6,
+            left: horizontalPadding,
+            right: horizontalPadding,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconBtn(
-                  onTap: traceCallback("scanner_screen.dart:58:onTap", () => context.pop()),
+                  onTap: traceCallback(
+                    "scanner_screen.dart:58:onTap",
+                    () => context.pop(),
+                  ),
                   icon: Icons.close,
                   color: textColor,
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 7,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(20),
@@ -95,43 +122,48 @@ class ScannerScreen extends StatelessWidget {
                   ),
                 ),
                 IconBtn(
-                  onTap: traceCallback("scanner_screen.dart:97:onTap", () => context.push('/assistant_vocal')),
+                  onTap: traceCallback(
+                    "scanner_screen.dart:97:onTap",
+                    () => context.push('/assistant_vocal'),
+                  ),
                   icon: Icons.mic_none_outlined,
                   color: accentColor,
                 ),
               ],
             ),
           ),
-          // Center - Scanner viewport
+
+          // Center - Scanner viewport (responsive)
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: 256,
-                  height: 256,
+                  width: scanSize,
+                  height: scanSize,
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
                       Container(
-                        width: 256,
-                        height: 256,
+                        width: scanSize,
+                        height: scanSize,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: accentColor.withValues(alpha: 0.28),
                             style: BorderStyle.solid,
+                            width: outerBorderWidth,
                           ),
                         ),
                       ),
                       Container(
-                        width: 256,
-                        height: 256,
+                        width: scanSize,
+                        height: scanSize,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: accentColor.withValues(alpha: 0.65),
-                            width: 1.5,
+                            width: innerBorderWidth,
                           ),
                         ),
                       ),
@@ -140,15 +172,21 @@ class ScannerScreen extends StatelessWidget {
                         top: 0,
                         left: 0,
                         child: Container(
-                          width: 34,
-                          height: 34,
+                          width: bracketSize,
+                          height: bracketSize,
                           decoration: BoxDecoration(
                             border: Border(
-                              top: BorderSide(color: accentColor, width: 2),
-                              left: BorderSide(color: accentColor, width: 2),
+                              top: BorderSide(
+                                color: accentColor,
+                                width: math.max(1.0, outerBorderWidth),
+                              ),
+                              left: BorderSide(
+                                color: accentColor,
+                                width: math.max(1.0, outerBorderWidth),
+                              ),
                             ),
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(8),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(bracketRadius),
                             ),
                           ),
                         ),
@@ -157,15 +195,21 @@ class ScannerScreen extends StatelessWidget {
                         top: 0,
                         right: 0,
                         child: Container(
-                          width: 34,
-                          height: 34,
+                          width: bracketSize,
+                          height: bracketSize,
                           decoration: BoxDecoration(
                             border: Border(
-                              top: BorderSide(color: accentColor, width: 2),
-                              right: BorderSide(color: accentColor, width: 2),
+                              top: BorderSide(
+                                color: accentColor,
+                                width: math.max(1.0, outerBorderWidth),
+                              ),
+                              right: BorderSide(
+                                color: accentColor,
+                                width: math.max(1.0, outerBorderWidth),
+                              ),
                             ),
-                            borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(8),
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(bracketRadius),
                             ),
                           ),
                         ),
@@ -174,15 +218,21 @@ class ScannerScreen extends StatelessWidget {
                         bottom: 0,
                         left: 0,
                         child: Container(
-                          width: 34,
-                          height: 34,
+                          width: bracketSize,
+                          height: bracketSize,
                           decoration: BoxDecoration(
                             border: Border(
-                              bottom: BorderSide(color: accentColor, width: 2),
-                              left: BorderSide(color: accentColor, width: 2),
+                              bottom: BorderSide(
+                                color: accentColor,
+                                width: math.max(1.0, outerBorderWidth),
+                              ),
+                              left: BorderSide(
+                                color: accentColor,
+                                width: math.max(1.0, outerBorderWidth),
+                              ),
                             ),
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(8),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(bracketRadius),
                             ),
                           ),
                         ),
@@ -191,25 +241,31 @@ class ScannerScreen extends StatelessWidget {
                         bottom: 0,
                         right: 0,
                         child: Container(
-                          width: 34,
-                          height: 34,
+                          width: bracketSize,
+                          height: bracketSize,
                           decoration: BoxDecoration(
                             border: Border(
-                              bottom: BorderSide(color: accentColor, width: 2),
-                              right: BorderSide(color: accentColor, width: 2),
+                              bottom: BorderSide(
+                                color: accentColor,
+                                width: math.max(1.0, outerBorderWidth),
+                              ),
+                              right: BorderSide(
+                                color: accentColor,
+                                width: math.max(1.0, outerBorderWidth),
+                              ),
                             ),
-                            borderRadius: const BorderRadius.only(
-                              bottomRight: Radius.circular(8),
+                            borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(bracketRadius),
                             ),
                           ),
                         ),
                       ),
                       Positioned(
-                        top: -28,
+                        top: -scanSize * 0.11,
                         child: Text(
                           'CADRAGE · FORME · MATIÈRE',
                           style: TextStyle(
-                            fontSize: 9,
+                            fontSize: math.max(9.0, scanSize * 0.035),
                             fontWeight: FontWeight.w500,
                             letterSpacing: 0.14,
                             color: accentColor.withValues(alpha: 0.7),
@@ -223,11 +279,12 @@ class ScannerScreen extends StatelessWidget {
               ],
             ),
           ),
+
           // Bottom controls
           Positioned(
             bottom: 16,
-            left: 20,
-            right: 20,
+            left: horizontalPadding,
+            right: horizontalPadding,
             child: Column(
               children: [
                 Wrap(
@@ -235,14 +292,10 @@ class ScannerScreen extends StatelessWidget {
                   runSpacing: 8,
                   alignment: WrapAlignment.center,
                   children: [
-                    _buildCategoryChip(
-                        context, 'Plastique', plasticColor, true),
-                    _buildCategoryChip(
-                        context, 'Organique', organicColor, false),
-                    _buildCategoryChip(
-                        context, 'Métal/verre', plasticColor, false),
-                    _buildCategoryChip(
-                        context, 'Dangereux', dangerColor, false),
+                    _buildCategoryChip(context, 'Plastique', plasticColor),
+                    _buildCategoryChip(context, 'Organique', organicColor),
+                    _buildCategoryChip(context, 'Métal/verre', plasticColor),
+                    _buildCategoryChip(context, 'Dangereux', dangerColor),
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -252,34 +305,37 @@ class ScannerScreen extends StatelessWidget {
                     _buildControlButton(
                       context,
                       icon: Icons.photo_library_outlined,
-                      onTap: () {
-                        // openGallery
-                        context.push('/analyse');
-                      },
+                      onTap: () => _openGallery(),
                     ),
                     GestureDetector(
-                      onTap: traceCallback("scanner_screen.dart:260:onTap", () => context.push('/analyse')),
+                      onTap: traceCallback(
+                        "scanner_screen.dart:260:onTap",
+                        () => _openCamera(),
+                      ),
                       child: Container(
-                        width: 80,
-                        height: 80,
+                        width: captureOuter,
+                        height: captureOuter,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: accentColor.withValues(alpha: 0.4),
-                            width: 3,
+                            width: math.max(2.0, captureOuter * 0.04),
                           ),
                         ),
                         child: Center(
                           child: Container(
-                            width: 70,
-                            height: 70,
+                            width: captureInner,
+                            height: captureInner,
                             decoration: BoxDecoration(
                               color: accentColor,
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
                                   color: accentColor.withValues(alpha: 0.6),
-                                  blurRadius: 26,
+                                  blurRadius: math.max(
+                                    12.0,
+                                    captureOuter * 0.32,
+                                  ),
                                 ),
                               ],
                             ),
@@ -290,13 +346,19 @@ class ScannerScreen extends StatelessWidget {
                     _buildControlButton(
                       context,
                       icon: Icons.map_outlined,
-                      onTap: traceCallback("scanner_screen.dart:292:onTap", () => context.push('/carte')),
+                      onTap: traceCallback(
+                        "scanner_screen.dart:292:onTap",
+                        () => context.push('/carte'),
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 GestureDetector(
-                  onTap: traceCallback("scanner_screen.dart:298:onTap", () => context.push('/erreur_camera')),
+                  onTap: traceCallback(
+                    "scanner_screen.dart:298:onTap",
+                    () => context.push('/erreur_camera'),
+                  ),
                   child: Text(
                     'Problème avec la caméra ?',
                     style: TextStyle(
@@ -315,28 +377,27 @@ class ScannerScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryChip(
-    BuildContext context,
-    String label,
-    Color color,
-    bool active,
-  ) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
-      decoration: BoxDecoration(
-        color: active ? color : Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: active ? color : color.withValues(alpha: 0.4),
+  Widget _buildCategoryChip(BuildContext context, String label, Color color) {
+    final active = _selectedCategory == label;
+    return GestureDetector(
+      onTap: () => setState(() => _selectedCategory = label),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
+        decoration: BoxDecoration(
+          color: active ? color : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: active ? color : color.withValues(alpha: 0.4),
+          ),
         ),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          color: active ? AppTheme.accentInk : color,
-          fontFamily: 'Space Grotesk',
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: active ? AppTheme.accentInk : color,
+            fontFamily: 'Space Grotesk',
+          ),
         ),
       ),
     );
@@ -359,17 +420,44 @@ class ScannerScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(13),
-          border: Border.all(
-            color: accentColor.withValues(alpha: 0.22),
-          ),
+          border: Border.all(color: accentColor.withValues(alpha: 0.22)),
         ),
-        child: Icon(
-          icon,
-          color: softColor,
-          size: 20,
-        ),
+        child: Icon(icon, color: softColor, size: 20),
       ),
     );
+  }
+
+  Future<void> _openGallery() async {
+    try {
+      final XFile? picked = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1600,
+      );
+      if (picked != null) {
+        if (!mounted) return;
+        context.push('/analyse', extra: picked.path);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      context.push('/erreur_camera');
+    }
+  }
+
+  Future<void> _openCamera() async {
+    try {
+      final XFile? picked = await _picker.pickImage(
+        source: ImageSource.camera,
+        preferredCameraDevice: CameraDevice.rear,
+        maxWidth: 1600,
+      );
+      if (picked != null) {
+        if (!mounted) return;
+        context.push('/analyse', extra: picked.path);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      context.push('/erreur_camera');
+    }
   }
 }
 
