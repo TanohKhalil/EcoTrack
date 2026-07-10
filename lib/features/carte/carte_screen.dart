@@ -129,6 +129,77 @@ class _CarteScreenState extends State<CarteScreen> {
               ),
             ),
             const SizedBox(height: 16),
+            // Search bar placed above the map
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: bgColor.withValues(alpha: 0.96),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(
+                    color: accentColor.withValues(alpha: 0.08),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.search,
+                      size: 18,
+                      color: textColor.withValues(alpha: 0.65),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: TextField(
+                        onChanged: (value) =>
+                            setState(() => _searchQuery = value),
+                        decoration: InputDecoration(
+                          hintText: 'Trouver un secteur ou un point...',
+                          hintStyle: TextStyle(
+                            color: textColor.withValues(alpha: 0.5),
+                            fontFamily: 'Space Grotesk',
+                          ),
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: textColor,
+                          fontFamily: 'Space Grotesk',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            // Filters placed below the search bar and outside the map
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _buildFilter('Tous', 'tous'),
+                    const SizedBox(width: 8),
+                    _buildFilter('Plastique', 'plastique'),
+                    const SizedBox(width: 8),
+                    _buildFilter('Organique', 'organique'),
+                    const SizedBox(width: 8),
+                    _buildFilter('Verre/Métal', 'verre'),
+                    const SizedBox(width: 8),
+                    _buildFilter('Signalements', 'danger'),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SizedBox(
@@ -241,78 +312,8 @@ class _CarteScreenState extends State<CarteScreen> {
                             ],
                           ),
                         ),
-                        Positioned(
-                          top: 18,
-                          left: 18,
-                          right: 18,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
-                            ),
-                            decoration: BoxDecoration(
-                              color: bgColor.withValues(alpha: 0.96),
-                              borderRadius: BorderRadius.circular(18),
-                              border: Border.all(
-                                color: accentColor.withValues(alpha: 0.08),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.search,
-                                  size: 18,
-                                  color: textColor.withValues(alpha: 0.65),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: TextField(
-                                    onChanged: (value) =>
-                                        setState(() => _searchQuery = value),
-                                    decoration: InputDecoration(
-                                      hintText:
-                                          'Trouver un secteur ou un point...',
-                                      hintStyle: TextStyle(
-                                        color: textColor.withValues(alpha: 0.5),
-                                        fontFamily: 'Space Grotesk',
-                                      ),
-                                      border: InputBorder.none,
-                                      isDense: true,
-                                      contentPadding: EdgeInsets.zero,
-                                    ),
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: textColor,
-                                      fontFamily: 'Space Grotesk',
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 82,
-                          left: 18,
-                          right: 18,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                _buildFilter('Tous', 'tous'),
-                                const SizedBox(width: 8),
-                                _buildFilter('Plastique', 'plastique'),
-                                const SizedBox(width: 8),
-                                _buildFilter('Organique', 'organique'),
-                                const SizedBox(width: 8),
-                                _buildFilter('Verre/Métal', 'verre'),
-                                const SizedBox(width: 8),
-                                _buildFilter('Signalements', 'danger'),
-                              ],
-                            ),
-                          ),
-                        ),
+                        // Search moved above the map; filters now sit near the top
+                        // filters moved outside the map
                         Positioned(
                           right: 18,
                           bottom: 108,
