@@ -47,7 +47,11 @@ class _SplashScreenState extends State<SplashScreen>
         ? AppTheme.accentInk
         : AppTheme.accentInkLight;
     final goldColor = isDark ? AppTheme.gold : AppTheme.goldLight;
-    final subtitleColor = textColor.withValues(alpha: 0.55);
+    final subtitleColor = isDark
+        ? textColor.withValues(alpha: 0.62)
+        : textColor.withValues(alpha: 0.78);
+    final buttonForegroundColor = isDark ? accentInkColor : Colors.white;
+    final iconColor = isDark ? accentInkColor : Colors.white;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -172,7 +176,7 @@ class _SplashScreenState extends State<SplashScreen>
                               child: Icon(
                                 Icons.delete_outline_rounded,
                                 size: 42,
-                                color: accentInkColor,
+                                color: iconColor,
                               ),
                             ),
                           ],
@@ -230,7 +234,7 @@ class _SplashScreenState extends State<SplashScreen>
                       onPressed: () => context.push('/inscription'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: accentColor,
-                        foregroundColor: accentInkColor,
+                        foregroundColor: buttonForegroundColor,
                         elevation: 0,
                         padding: const EdgeInsets.symmetric(vertical: 18),
                         shape: RoundedRectangleBorder(

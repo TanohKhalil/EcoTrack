@@ -18,18 +18,18 @@ class AppTheme {
   static const Color phA = Color(0xFF1B3A2F);
   static const Color phB = Color(0xFF2F6E4E);
 
-  static const Color bgLight = Color(0xFFF1F7EF);
-  static const Color deepLight = Color(0xFFE6EFE2);
+  static const Color bgLight = Color(0xFFF4F9F0);
+  static const Color deepLight = Color(0xFFE8F2E2);
   static const Color surfaceLight = Color(0xFFFFFFFF);
   static const Color cardLight = Color(0xFFFFFFFF);
-  static const Color textLight = Color(0xFF122C1B);
-  static const Color accentLight = Color(0xFF189A63);
-  static const Color accentInkLight = Color(0xFFF3FBF4);
-  static const Color softLight = Color(0xFF0E7A4D);
-  static const Color organicLight = Color(0xFFB2661F);
-  static const Color plasticLight = Color(0xFF1C7FAE);
+  static const Color textLight = Color(0xFF153523);
+  static const Color accentLight = Color(0xFF15845A);
+  static const Color accentInkLight = Color(0xFFFFFFFF);
+  static const Color softLight = Color(0xFF0F6B45);
+  static const Color organicLight = Color(0xFFB2691F);
+  static const Color plasticLight = Color(0xFF1B7FAE);
   static const Color dangerLight = Color(0xFFD14538);
-  static const Color goldLight = Color(0xFFB4820E);
+  static const Color goldLight = Color(0xFF9D660A);
   static const Color blueLight = Color(0xFF3559C9);
   static const Color phALight = Color(0xFFE6F4E9);
   static const Color phBLight = Color(0xFFD6EEDB);
