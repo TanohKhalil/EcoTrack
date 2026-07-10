@@ -378,6 +378,23 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
                         ),
                         const SizedBox(width: 9),
                         _buildStatCard('6', 'collectes', textColor),
+                        Row(
+                          children: [
+                            _buildStatCard('1 240', 'points', accentColor),
+                            const SizedBox(width: 9),
+                            _buildStatCard(
+                              '38 kg',
+                              'triés / mois',
+                              textColor,
+                              onTap: traceCallback(
+                                "accueil_menage_screen.dart:400:onTap",
+                                () => context.push('/historique'),
+                              ),
+                            ),
+                            const SizedBox(width: 9),
+                            _buildStatCard('6', 'collectes', textColor),
+                          ],
+                        ),
                       ],
                     ),
                     const SizedBox(height: 26),
