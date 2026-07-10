@@ -61,41 +61,7 @@ class _SplashScreenState extends State<SplashScreen>
       body: SafeArea(
         child: Column(
           children: [
-            // Ligne du haut : badge "Pensé pour Abidjan" aligné à droite
-            Padding(
-              padding: const EdgeInsets.fromLTRB(32, 20, 24, 0),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Transform.rotate(
-                  angle: -0.06,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: goldColor,
-                      borderRadius: BorderRadius.circular(14),
-                      boxShadow: [
-                        BoxShadow(
-                          color: goldColor.withValues(alpha: 0.35),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Text(
-                      '🇨🇮 Pensé pour Abidjan',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: isDark ? AppTheme.accentInk : Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // Ligne du haut : badge supprimé
 
             // Bloc central : parfaitement centré dans l'espace restant
             Expanded(
@@ -163,29 +129,13 @@ class _SplashScreenState extends State<SplashScreen>
                               },
                             ),
                             Container(
-                              width: 88,
-                              height: 88,
-                              decoration: BoxDecoration(
-                                color: accentColor,
-                                borderRadius: BorderRadius.circular(22),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: accentColor.withValues(alpha: 0.30),
-                                    blurRadius: 20,
-                                    offset: const Offset(0, 10),
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: SvgPicture.asset(
-                                  'assets/images/recycling-symbol-svgrepo-com.svg',
-                                  width: 42,
-                                  height: 42,
-                                  colorFilter: ColorFilter.mode(
-                                    iconColor,
-                                    BlendMode.srcIn,
-                                  ),
-                                ),
+                              width: 160,
+                              height: 160,
+                              alignment: Alignment.center,
+                              child: SvgPicture.asset(
+                                'assets/images/recycling-symbol-svgrepo-com.svg',
+                                width: 98,
+                                height: 98,
                               ),
                             ),
                           ],

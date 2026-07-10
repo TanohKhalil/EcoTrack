@@ -378,38 +378,6 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
                     Stack(
                       clipBehavior: Clip.none,
                       children: [
-                        Positioned(
-                          top: -11,
-                          right: 6,
-                          child: Transform.rotate(
-                            angle: 0.1,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 5,
-                              ),
-                              decoration: BoxDecoration(
-                                color: goldColor,
-                                borderRadius: BorderRadius.circular(7),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.25),
-                                    blurRadius: 12,
-                                  ),
-                                ],
-                              ),
-                              child: Text(
-                                '🔥 7 jours d\'affilée',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w700,
-                                  color: const Color(0xFF2B1D00),
-                                  fontFamily: 'Space Grotesk',
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
                         Row(
                           children: [
                             _buildStatCard('1 240', 'points', accentColor),
