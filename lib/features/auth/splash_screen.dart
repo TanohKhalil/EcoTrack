@@ -128,6 +128,11 @@ class _SplashScreenState extends State<SplashScreen>
                                 );
                               },
                             ),
+                            Center(
+                              child: SvgPicture.asset(
+                                'assets/images/logo.svg',
+                                width: 110,
+                                height: 110,
                             Container(
                               width: 160,
                               height: 160,
