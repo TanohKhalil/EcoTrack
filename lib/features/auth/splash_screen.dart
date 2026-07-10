@@ -162,30 +162,11 @@ class _SplashScreenState extends State<SplashScreen>
                                 );
                               },
                             ),
-                            Container(
-                              width: 88,
-                              height: 88,
-                              decoration: BoxDecoration(
-                                color: accentColor,
-                                borderRadius: BorderRadius.circular(22),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: accentColor.withValues(alpha: 0.30),
-                                    blurRadius: 20,
-                                    offset: const Offset(0, 10),
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: SvgPicture.asset(
-                                  'assets/images/recycling-symbol-svgrepo-com.svg',
-                                  width: 42,
-                                  height: 42,
-                                  colorFilter: ColorFilter.mode(
-                                    iconColor,
-                                    BlendMode.srcIn,
-                                  ),
-                                ),
+                            Center(
+                              child: SvgPicture.asset(
+                                'assets/images/logo.svg',
+                                width: 110,
+                                height: 110,
                               ),
                             ),
                           ],

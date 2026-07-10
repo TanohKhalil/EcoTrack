@@ -66,23 +66,11 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
                       children: [
                         Row(
                           children: [
-                            Container(
-                              width: 34,
-                              height: 34,
-                              decoration: BoxDecoration(
-                                color: accentColor,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: SvgPicture.asset(
-                                  'assets/images/recycling-symbol-svgrepo-com.svg',
-                                  width: 17,
-                                  height: 17,
-                                  colorFilter: const ColorFilter.mode(
-                                    AppTheme.accentInk,
-                                    BlendMode.srcIn,
-                                  ),
-                                ),
+                            Center(
+                              child: SvgPicture.asset(
+                                'assets/images/logo.svg',
+                                width: 34,
+                                height: 34,
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -375,58 +363,21 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
                     ),
                     const SizedBox(height: 22),
                     // Stats
-                    Stack(
-                      clipBehavior: Clip.none,
+                    Row(
                       children: [
-                        Positioned(
-                          top: -11,
-                          right: 6,
-                          child: Transform.rotate(
-                            angle: 0.1,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 5,
-                              ),
-                              decoration: BoxDecoration(
-                                color: goldColor,
-                                borderRadius: BorderRadius.circular(7),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.25),
-                                    blurRadius: 12,
-                                  ),
-                                ],
-                              ),
-                              child: Text(
-                                '🔥 7 jours d\'affilée',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w700,
-                                  color: const Color(0xFF2B1D00),
-                                  fontFamily: 'Space Grotesk',
-                                ),
-                              ),
-                            ),
+                        _buildStatCard('1 240', 'points', accentColor),
+                        const SizedBox(width: 9),
+                        _buildStatCard(
+                          '38 kg',
+                          'triés / mois',
+                          textColor,
+                          onTap: traceCallback(
+                            "accueil_menage_screen.dart:400:onTap",
+                            () => context.push('/historique'),
                           ),
                         ),
-                        Row(
-                          children: [
-                            _buildStatCard('1 240', 'points', accentColor),
-                            const SizedBox(width: 9),
-                            _buildStatCard(
-                              '38 kg',
-                              'triés / mois',
-                              textColor,
-                              onTap: traceCallback(
-                                "accueil_menage_screen.dart:400:onTap",
-                                () => context.push('/historique'),
-                              ),
-                            ),
-                            const SizedBox(width: 9),
-                            _buildStatCard('6', 'collectes', textColor),
-                          ],
-                        ),
+                        const SizedBox(width: 9),
+                        _buildStatCard('6', 'collectes', textColor),
                       ],
                     ),
                     const SizedBox(height: 26),
@@ -434,15 +385,30 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Passage du collecteur',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: textColor,
-                            fontFamily: 'Space Grotesk',
+                        Expanded(
+                          child: Text(
+                            'Passage du collecteur',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: textColor,
+                              fontFamily: 'Space Grotesk',
+                            ),
                           ),
                         ),
+                        Transform.rotate(
+                          angle: 0.1,
+                          child: Text(
+                            '🔥 7 jours d\'affilée',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: goldColor,
+                              fontFamily: 'Space Grotesk',
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
                         GestureDetector(
                           onTap: traceCallback(
                             "accueil_menage_screen.dart:423:onTap",
