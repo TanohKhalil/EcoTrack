@@ -138,6 +138,6 @@ extension ColorWithValues on Color {
         a.clamp(0.0, 1.0),
       );
     }
-    return withOpacity(a.clamp(0.0, 1.0));
+    return withValues(alpha: a.clamp(0.0, 1.0));
   }
 }
