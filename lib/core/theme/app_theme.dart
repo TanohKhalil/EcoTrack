@@ -23,7 +23,7 @@ class AppTheme {
   static const Color surfaceLight = Color(0xFFFFFFFF);
   static const Color cardLight = Color(0xFFFFFFFF);
   static const Color textLight = Color(0xFF153523);
-  static const Color accentLight = Color(0xFF15845A);
+  static const Color accentLight = Color(0xFF40D089);
   static const Color accentInkLight = Color(0xFFFFFFFF);
   static const Color softLight = Color(0xFF0F6B45);
   static const Color organicLight = Color(0xFFB2691F);

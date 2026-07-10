@@ -6,17 +6,12 @@ class BottomNav extends ConsumerWidget {
   final int currentIndex;
   final Function(int) onTap;
 
-  const BottomNav({
-    super.key,
-    required this.currentIndex,
-    required this.onTap,
-  });
+  const BottomNav({super.key, required this.currentIndex, required this.onTap});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? AppTheme.surface : AppTheme.surfaceLight;
-    final textColor = isDark ? AppTheme.text : AppTheme.textLight;
     final accentColor = isDark ? AppTheme.accent : AppTheme.accentLight;
 
     return Container(
@@ -24,10 +19,7 @@ class BottomNav extends ConsumerWidget {
       decoration: BoxDecoration(
         color: bgColor.withValues(alpha: 0.92),
         border: Border(
-          top: BorderSide(
-            color: accentColor.withValues(alpha: 0.12),
-            width: 1,
-          ),
+          top: BorderSide(color: accentColor.withValues(alpha: 0.12), width: 1),
         ),
       ),
       child: Row(
@@ -74,20 +66,19 @@ class BottomNav extends ConsumerWidget {
     required int index,
   }) {
     final isActive = currentIndex == index;
-    final color =
-        isActive ? AppTheme.accent : AppTheme.text.withValues(alpha: 0.4);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final color = isActive
+        ? (isDark ? AppTheme.accent : AppTheme.accentLight)
+        : (isDark
+              ? AppTheme.text.withValues(alpha: 0.4)
+              : AppTheme.textLight.withValues(alpha: 0.7));
 
     return GestureDetector(
       onTap: () => onTap(index),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            isActive ? activeIcon : icon,
-            size: 22,
-            color: color,
-          ),
+          Icon(isActive ? activeIcon : icon, size: 22, color: color),
           const SizedBox(height: 3),
           Text(
             label,
