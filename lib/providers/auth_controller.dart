@@ -56,6 +56,7 @@ class AuthController extends StateNotifier<AuthState> {
 
   final Ref _ref;
   String? pendingEmail;
+  String? pendingPassword;
   Timer? _resendTimer;
 
   @override
@@ -89,6 +90,7 @@ class AuthController extends StateNotifier<AuthState> {
     try {
       await SupabaseService.signUpWithEmail(email, password);
       pendingEmail = email;
+      pendingPassword = password;
       _startResendCountdown();
       _setSuccess('Un code de confirmation a été envoyé à $email.');
       return true;
@@ -105,6 +107,17 @@ class AuthController extends StateNotifier<AuthState> {
     _setLoading();
     try {
       await SupabaseService.verifyOtp(email, token, OtpType.signup);
+      if (pendingPassword != null) {
+        final signInResponse = await SupabaseService.signInWithEmail(
+          email,
+          pendingPassword!,
+        );
+        pendingPassword = null;
+        if (signInResponse.session == null) {
+          _setError('La vérification a réussi, mais la connexion a échoué.');
+          return false;
+        }
+      }
       _setSuccess();
       return true;
     } on AuthException catch (e) {

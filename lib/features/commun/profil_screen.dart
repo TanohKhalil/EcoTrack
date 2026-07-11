@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/toast.dart';
 import '../../core/widgets/widgets.dart';
 import '../../core/constants/mock_data.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/offline_provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
 
@@ -247,7 +249,15 @@ class ProfilScreen extends ConsumerWidget {
                     OutlinedButton(
                       onPressed: traceCallback(
                         "profil_screen.dart:231:onPressed",
-                        () => context.push('/connexion'),
+                        () async {
+                          try {
+                            await ref.read(authActionsProvider).signOut();
+                          } catch (_) {
+                            showToast(context, 'Impossible de se déconnecter');
+                          }
+                          if (!context.mounted) return;
+                          context.go('/connexion');
+                        },
                       ),
                       style: OutlinedButton.styleFrom(
                         minimumSize: const Size(double.infinity, 48),
