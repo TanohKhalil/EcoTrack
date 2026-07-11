@@ -8,6 +8,7 @@ import '../../providers/offline_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
+
 class ProfilScreen extends ConsumerWidget {
   const ProfilScreen({super.key});
 
@@ -46,7 +47,10 @@ class ProfilScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconBtn(
-                          onTap: traceCallback("profil_screen.dart:48:onTap", () => context.pop()),
+                          onTap: traceCallback(
+                            "profil_screen.dart:48:onTap",
+                            () => context.pop(),
+                          ),
                           icon: Icons.arrow_back_ios_new,
                         ),
                         Row(
@@ -124,40 +128,49 @@ class ProfilScreen extends ConsumerWidget {
                     Row(
                       children: [
                         _buildStatCard(
-                            context, '${user.points}', 'points', accentColor),
+                          context,
+                          '${user.points}',
+                          'points',
+                          accentColor,
+                        ),
                         const SizedBox(width: 9),
                         _buildStatCard(
-                            context,
-                            '${user.kgValorises.toInt()} kg',
-                            'valorisés',
-                            textColor),
+                          context,
+                          '${user.kgValorises.toInt()} kg',
+                          'valorisés',
+                          textColor,
+                        ),
                         const SizedBox(width: 9),
-                        _buildStatCard(context, '${user.moisActifs}',
-                            'mois actifs', textColor),
+                        _buildStatCard(
+                          context,
+                          '${user.moisActifs}',
+                          'mois actifs',
+                          textColor,
+                        ),
                       ],
                     ),
                     const SizedBox(height: 24),
                     const Eyebrow(text: 'HISTORIQUE & COMPTE'),
                     const SizedBox(height: 11),
-                    _buildMenuItem(context, 'Historique de tri',
-                        () => context.push('/historique')),
-                    const SizedBox(height: 9),
-                    _buildMenuItem(context, 'Paramètres',
-                        () => context.push('/parametres')),
+                    _buildMenuItem(
+                      context,
+                      'Historique de tri',
+                      () => context.push('/historique'),
+                    ),
                     const SizedBox(height: 9),
                     _buildMenuItem(
-                        context, 'Aide & FAQ', () => context.push('/aide')),
+                      context,
+                      'Paramètres',
+                      () => context.push('/parametres'),
+                    ),
+                    const SizedBox(height: 9),
+                    _buildMenuItem(
+                      context,
+                      'Aide & FAQ',
+                      () => context.push('/aide'),
+                    ),
                     const SizedBox(height: 24),
-                    const Eyebrow(text: 'MES PROFILS'),
-                    const SizedBox(height: 11),
-                    _buildProfileItem(context, 'Ménage / Commerce', true,
-                        () => context.push('/accueil_menage')),
-                    const SizedBox(height: 9),
-                    _buildProfileItem(context, 'Collecteur informel', false,
-                        () => context.push('/accueil_collecteur')),
-                    const SizedBox(height: 9),
-                    _buildProfileItem(context, 'Mairie / Collectivité', false,
-                        () => context.push('/dashboard_mairie')),
+                    // Multi-profile selection removed for single-role onboarding
                     const SizedBox(height: 24),
                     Container(
                       padding: const EdgeInsets.all(13),
@@ -217,7 +230,10 @@ class ProfilScreen extends ConsumerWidget {
                             ),
                           ),
                           GestureDetector(
-                            onTap: traceCallback("profil_screen.dart:219:onTap", () => context.push('/impact_carbone')),
+                            onTap: traceCallback(
+                              "profil_screen.dart:219:onTap",
+                              () => context.push('/impact_carbone'),
+                            ),
                             child: const Icon(
                               Icons.arrow_forward_ios,
                               size: 14,
@@ -229,7 +245,10 @@ class ProfilScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 24),
                     OutlinedButton(
-                      onPressed: traceCallback("profil_screen.dart:231:onPressed", () => context.push('/connexion')),
+                      onPressed: traceCallback(
+                        "profil_screen.dart:231:onPressed",
+                        () => context.push('/connexion'),
+                      ),
                       style: OutlinedButton.styleFrom(
                         minimumSize: const Size(double.infinity, 48),
                       ),
@@ -246,7 +265,11 @@ class ProfilScreen extends ConsumerWidget {
   }
 
   Widget _buildStatCard(
-      BuildContext context, String value, String label, Color valueColor) {
+    BuildContext context,
+    String value,
+    String label,
+    Color valueColor,
+  ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardColor = isDark ? AppTheme.card : AppTheme.cardLight;
     final textColor = isDark ? AppTheme.text : AppTheme.textLight;
@@ -257,9 +280,7 @@ class ProfilScreen extends ConsumerWidget {
         decoration: BoxDecoration(
           color: cardColor,
           borderRadius: BorderRadius.circular(15),
-          border: Border.all(
-            color: AppTheme.accent.withValues(alpha: 0.14),
-          ),
+          border: Border.all(color: AppTheme.accent.withValues(alpha: 0.14)),
         ),
         child: Column(
           children: [
@@ -289,7 +310,10 @@ class ProfilScreen extends ConsumerWidget {
   }
 
   Widget _buildMenuItem(
-      BuildContext context, String label, VoidCallback onTap) {
+    BuildContext context,
+    String label,
+    VoidCallback onTap,
+  ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardColor = isDark ? AppTheme.card : AppTheme.cardLight;
     final textColor = isDark ? AppTheme.text : AppTheme.textLight;
@@ -301,9 +325,7 @@ class ProfilScreen extends ConsumerWidget {
         decoration: BoxDecoration(
           color: cardColor,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: AppTheme.accent.withValues(alpha: 0.14),
-          ),
+          border: Border.all(color: AppTheme.accent.withValues(alpha: 0.14)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -317,65 +339,7 @@ class ProfilScreen extends ConsumerWidget {
                 fontFamily: 'Space Grotesk',
               ),
             ),
-            const Icon(
-              Icons.arrow_forward_ios,
-              size: 14,
-              color: AppTheme.text,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProfileItem(
-      BuildContext context, String label, bool active, VoidCallback onTap) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cardColor = isDark ? AppTheme.card : AppTheme.cardLight;
-    final textColor = isDark ? AppTheme.text : AppTheme.textLight;
-    final accentColor = isDark ? AppTheme.accent : AppTheme.accentLight;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
-        decoration: BoxDecoration(
-          color: cardColor,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: active
-                ? accentColor.withValues(alpha: 0.18)
-                : accentColor.withValues(alpha: 0.1),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: active ? textColor : textColor.withValues(alpha: 0.7),
-                fontFamily: 'Space Grotesk',
-              ),
-            ),
-            if (active)
-              Text(
-                'ACTIF',
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: accentColor,
-                  fontFamily: 'Space Grotesk',
-                ),
-              )
-            else
-              const Icon(
-                Icons.arrow_forward_ios,
-                size: 14,
-                color: AppTheme.text,
-              ),
+            const Icon(Icons.arrow_forward_ios, size: 14, color: AppTheme.text),
           ],
         ),
       ),

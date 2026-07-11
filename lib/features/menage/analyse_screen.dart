@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 import '../../core/services/ai_analysis_service.dart';
+import '../../services/supabase_service.dart';
 
 class AnalyseScreen extends StatefulWidget {
   final String? imagePath;
@@ -22,12 +24,33 @@ class _AnalyseScreenState extends State<AnalyseScreen> {
     final duration = widget.imagePath != null
         ? const Duration(seconds: 2)
         : const Duration(seconds: 3);
-    Future.delayed(duration, () {
+    Future.delayed(duration, () async {
       if (!mounted) return;
       final input = widget.imagePath ?? 'déchet détecté';
       final result = AiAnalysisService.buildResultFromInput(userText: input);
+      _saveScanResult(result);
       context.push('/resultat', extra: result);
     });
+  }
+
+  Future<void> _saveScanResult(AiClassificationResult result) async {
+    final userId = SupabaseService.client.auth.currentUser?.id;
+    if (userId == null) return;
+    try {
+      await SupabaseService.createWasteScanResultFromClassification(
+        userId: userId,
+        categorie: result.category,
+        confiance: result.confidence,
+        detail: result.detail,
+        recommendation: result.recommendation,
+        depositPoint: result.depositPoint,
+        distanceKm: result.distanceKm,
+        points: result.points,
+        impactKg: result.impactKg,
+      );
+    } catch (error) {
+      debugPrint('Impossible de sauvegarder le résultat du scan : $error');
+    }
   }
 
   @override

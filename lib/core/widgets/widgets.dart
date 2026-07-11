@@ -33,11 +33,7 @@ class IconBtn extends StatelessWidget {
             color: (color ?? AppTheme.accent).withValues(alpha: 0.18),
           ),
         ),
-        child: Icon(
-          icon,
-          color: color ?? softColor,
-          size: 18,
-        ),
+        child: Icon(icon, color: color ?? softColor, size: 18),
       ),
     );
   }
@@ -48,12 +44,7 @@ class ChipWidget extends StatelessWidget {
   final Color? color;
   final VoidCallback? onTap;
 
-  const ChipWidget({
-    super.key,
-    required this.label,
-    this.color,
-    this.onTap,
-  });
+  const ChipWidget({super.key, required this.label, this.color, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +60,9 @@ class ChipWidget extends StatelessWidget {
           color: color?.withValues(alpha: 0.1) ?? Colors.transparent,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: color?.withValues(alpha: 0.3) ?? accentColor.withValues(alpha: 0.3),
+            color:
+                color?.withValues(alpha: 0.3) ??
+                accentColor.withValues(alpha: 0.3),
           ),
         ),
         child: Text(
@@ -90,11 +83,7 @@ class Eyebrow extends StatelessWidget {
   final String text;
   final Color? color;
 
-  const Eyebrow({
-    super.key,
-    required this.text,
-    this.color,
-  });
+  const Eyebrow({super.key, required this.text, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -185,6 +174,82 @@ class SectionTitle extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+class OtpInput extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final String hintText;
+  final bool enabled;
+
+  const OtpInput({
+    super.key,
+    required this.controller,
+    required this.label,
+    required this.hintText,
+    this.enabled = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardColor = isDark ? AppTheme.card : AppTheme.cardLight;
+    final accentColor = isDark ? AppTheme.accent : AppTheme.accentLight;
+    final textColor = isDark ? AppTheme.text : AppTheme.textLight;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: textColor.withValues(alpha: 0.8),
+            fontFamily: 'Space Grotesk',
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: controller,
+          enabled: enabled,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: TextStyle(color: textColor.withValues(alpha: 0.5)),
+            filled: true,
+            fillColor: cardColor,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(13),
+              borderSide: BorderSide(
+                color: accentColor.withValues(alpha: 0.16),
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(13),
+              borderSide: BorderSide(
+                color: accentColor.withValues(alpha: 0.16),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(13),
+              borderSide: BorderSide(color: accentColor),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 15,
+            ),
+          ),
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: textColor,
+            fontFamily: 'Space Grotesk',
+          ),
+        ),
+      ],
     );
   }
 }

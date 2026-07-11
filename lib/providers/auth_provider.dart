@@ -27,6 +27,6 @@ class AuthActions {
   }
 
   Future<void> resetPassword(String email) {
-    return SupabaseService.resetPassword(email);
+    return SupabaseService.resetPasswordForEmail(email);
   }
 }

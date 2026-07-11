@@ -6,6 +6,7 @@ class AiClassificationResult {
     required this.recommendation,
     required this.depositPoint,
     required this.distance,
+    required this.distanceKm,
     required this.points,
     required this.impactKg,
   });
@@ -16,6 +17,7 @@ class AiClassificationResult {
   final String recommendation;
   final String depositPoint;
   final String distance;
+  final double distanceKm;
   final int points;
   final int impactKg;
 }
@@ -36,6 +38,7 @@ class AiAnalysisService {
         recommendation: 'Unité de recyclage · Marcory',
         depositPoint: 'Bac de tri — Rue 12',
         distance: '1,2 km · dépôt sous 24h recommandé',
+        distanceKm: 1.2,
         points: 25,
         impactKg: 38,
       );
@@ -52,6 +55,7 @@ class AiAnalysisService {
         recommendation: 'Unité de compost · Yopougon',
         depositPoint: 'Bac communautaire — Rue 12',
         distance: '1,8 km · dépôt sous 24h recommandé',
+        distanceKm: 1.8,
         points: 25,
         impactKg: 38,
       );
@@ -67,6 +71,7 @@ class AiAnalysisService {
         recommendation: 'Centre de tri · Treichville',
         depositPoint: 'Point de collecte — Plateau',
         distance: '2,4 km · dépôt sous 24h recommandé',
+        distanceKm: 2.4,
         points: 20,
         impactKg: 24,
       );
@@ -79,6 +84,7 @@ class AiAnalysisService {
       recommendation: 'Centre de tri · Cocody',
       depositPoint: 'Bac communautaire — Rue 12',
       distance: '1,6 km · dépôt sous 24h recommandé',
+      distanceKm: 1.6,
       points: 18,
       impactKg: 22,
     );

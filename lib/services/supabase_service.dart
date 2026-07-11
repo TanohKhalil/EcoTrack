@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:gotrue/gotrue.dart';
 
 import '../models/app_user.dart';
 import '../models/collect_point.dart';
@@ -47,20 +46,28 @@ class SupabaseService {
     return client.auth.signInWithOtp(email: email, shouldCreateUser: true);
   }
 
-  static Future<AuthResponse> verifyEmailOtp(String email, String token) {
-    return client.auth.verifyOTP(
-      email: email,
-      token: token,
-      type: OtpType.signup,
-    );
+  static Future<AuthResponse> verifyOtp(
+    String email,
+    String token,
+    OtpType type,
+  ) {
+    return client.auth.verifyOTP(email: email, token: token, type: type);
+  }
+
+  static Future<ResendResponse> resendOtp(String email, OtpType type) {
+    return client.auth.resend(email: email, type: type);
+  }
+
+  static Future<void> resetPasswordForEmail(String email) {
+    return client.auth.resetPasswordForEmail(email);
+  }
+
+  static Future<UserResponse> updateUserPassword(String password) {
+    return client.auth.updateUser(UserAttributes(password: password));
   }
 
   static Future<void> signOut() {
     return client.auth.signOut();
-  }
-
-  static Future<void> resetPassword(String email) {
-    return client.auth.resetPasswordForEmail(email);
   }
 
   // Profils
@@ -98,8 +105,11 @@ class SupabaseService {
   ) async {
     final Map<String, dynamic>? record = await client
         .from('profiles')
-        .update({'role_actif': roleActif})
-        .eq('user_id', userId)
+        .upsert({
+          'user_id': userId,
+          'role_actif': roleActif,
+          'roles_disponibles': [roleActif],
+        }, onConflict: 'user_id')
         .select()
         .maybeSingle();
 
@@ -108,6 +118,40 @@ class SupabaseService {
     }
 
     return AppUser.fromJson(record);
+  }
+
+  static Future<WasteScanResult> createWasteScanResultFromClassification({
+    required String userId,
+    required String categorie,
+    required int confiance,
+    required String detail,
+    required String recommendation,
+    required String depositPoint,
+    required double distanceKm,
+    required int points,
+    required int impactKg,
+  }) async {
+    final Map<String, dynamic>? record = await client
+        .from('waste_scan_results')
+        .insert({
+          'user_id': userId,
+          'categorie': categorie,
+          'confiance': confiance,
+          'detail': detail,
+          'recommendation': recommendation,
+          'deposit_point': depositPoint,
+          'distance_km': distanceKm,
+          'points': points,
+          'impact_kg': impactKg,
+        })
+        .select()
+        .maybeSingle();
+
+    if (record == null) {
+      throw Exception('Impossible de sauvegarder le résultat de scan.');
+    }
+
+    return WasteScanResult.fromJson(record);
   }
 
   static Future<AppUser> addRoleDisponible(

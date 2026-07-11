@@ -61,7 +61,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         orElse: () => false,
       );
 
-      final authRoutes = <String>{
+      final publicRoutes = <String>{
         '/',
         '/connexion',
         '/inscription',
@@ -73,26 +73,38 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         '/verification_email_otp',
       };
 
-      if (!isLoggedIn && !authRoutes.contains(state.uri.toString())) {
+      final currentPath = state.uri.path;
+      if (!isLoggedIn && !publicRoutes.contains(currentPath)) {
         return '/';
       }
 
-      if (isLoggedIn && authRoutes.contains(state.uri.toString())) {
+      if (isLoggedIn) {
         final profileState = ref.watch(profileProvider);
-        final roleActif = profileState.maybeWhen(
-          data: (profile) => profile?.roleActif ?? '',
-          orElse: () => '',
+        return profileState.when(
+          data: (profile) {
+            final roleActif = profile?.roleActif ?? '';
+            if (roleActif.isEmpty && currentPath != '/onboarding') {
+              return '/onboarding';
+            }
+            if (roleActif.isNotEmpty &&
+                (publicRoutes.contains(currentPath) ||
+                    currentPath == '/onboarding')) {
+              if (roleActif == 'collecteur') {
+                return '/accueil_collecteur';
+              }
+              if (roleActif == 'filiere') {
+                return '/accueil_filiere';
+              }
+              if (roleActif == 'mairie') {
+                return '/dashboard_mairie';
+              }
+              return '/accueil_menage';
+            }
+            return null;
+          },
+          loading: () => null,
+          error: (_, __) => null,
         );
-        if (roleActif == 'collecteur') {
-          return '/accueil_collecteur';
-        }
-        if (roleActif == 'filiere') {
-          return '/accueil_filiere';
-        }
-        if (roleActif == 'mairie') {
-          return '/dashboard_mairie';
-        }
-        return '/accueil_menage';
       }
 
       return null;

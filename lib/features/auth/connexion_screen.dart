@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/toast.dart';
 import '../../core/widgets/widgets.dart';
-import '../../providers/auth_provider.dart';
+import '../../providers/auth_controller.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
 
@@ -38,28 +37,29 @@ class _ConnexionScreenState extends ConsumerState<ConnexionScreen> {
     }
 
     setState(() => _isLoading = true);
-    String? errorMsg;
     try {
-      final response = await ref
-          .read(authActionsProvider)
+      final result = await ref
+          .read(authControllerProvider.notifier)
           .signIn(email, password);
       if (!mounted) return;
-      final success =
-          response.user != null || response.session?.accessToken != null;
-      if (success) {
+      if (result.success) {
         context.go('/');
         return;
       }
-      errorMsg = 'Échec de la connexion. Vérifiez vos identifiants.';
-    } on AuthException catch (e) {
-      errorMsg = e.message;
-    } catch (e) {
-      errorMsg = 'Échec de la connexion. Vérifiez vos identifiants.';
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-        if (errorMsg != null) showToast(context, errorMsg);
+      if (result.emailNotConfirmed) {
+        showToast(context, 'Email non vérifié. Entrez le code reçu.');
+        context.pushNamed('verification_email_otp', extra: {'email': email});
+        return;
       }
+      showToast(
+        context,
+        result.message ?? 'Échec de la connexion. Vérifiez vos identifiants.',
+      );
+    } catch (e) {
+      if (!mounted) return;
+      showToast(context, 'Échec de la connexion. Vérifiez vos identifiants.');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 

@@ -49,7 +49,7 @@ class VerificationEmailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Un lien de confirmation a été envoyé à votre adresse email. Cliquez dessus pour activer votre compte.',
+                'Un code de vérification a été envoyé à votre adresse email. Saisissez-le dans l\'écran suivant pour activer votre compte.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 13,
@@ -64,10 +64,9 @@ class VerificationEmailScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    showToast(context, 'Email confirmé');
-                    context.push('/onboarding');
+                    context.push('/verification_email_otp');
                   },
-                  child: const Text('J\'ai confirmé, continuer'),
+                  child: const Text('Entrer le code reçu'),
                 ),
               ),
               const SizedBox(height: 14),
@@ -85,10 +84,13 @@ class VerificationEmailScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      showToast(context, 'Email renvoyé');
+                      showToast(
+                        context,
+                        'Veuillez utiliser la fonction de renvoi sur l\'écran de code.',
+                      );
                     },
                     child: Text(
-                      'Renvoyer le lien',
+                      'Renvoyer le code',
                       style: TextStyle(
                         fontSize: 12.5,
                         fontWeight: FontWeight.w600,

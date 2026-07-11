@@ -1,12 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 import '../../core/widgets/toast.dart';
+import '../../providers/auth_controller.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
-class MdpOublieScreen extends StatelessWidget {
+
+class MdpOublieScreen extends ConsumerStatefulWidget {
   const MdpOublieScreen({super.key});
+
+  @override
+  ConsumerState<MdpOublieScreen> createState() => _MdpOublieScreenState();
+}
+
+class _MdpOublieScreenState extends ConsumerState<MdpOublieScreen> {
+  final TextEditingController _identifierController = TextEditingController();
+
+  @override
+  void dispose() {
+    _identifierController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +41,10 @@ class MdpOublieScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: traceCallback("mdp_oublie_screen.dart:27:onTap", () => context.pop()),
+                onTap: traceCallback(
+                  "mdp_oublie_screen.dart:27:onTap",
+                  () => context.pop(),
+                ),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 26),
@@ -53,11 +72,13 @@ class MdpOublieScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              const Eyebrow(text: 'TÉLÉPHONE OU EMAIL'),
+              const Eyebrow(text: 'EMAIL ASSOCIÉ'),
               const SizedBox(height: 8),
               TextField(
+                controller: _identifierController,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
-                  hintText: '07 00 00 00 00 ou aya@exemple.ci',
+                  hintText: 'aya@exemple.ci',
                   hintStyle: TextStyle(color: textColor.withValues(alpha: 0.5)),
                   filled: true,
                   fillColor: cardColor,
@@ -93,9 +114,30 @@ class MdpOublieScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    showToast(context, 'Code envoyé');
-                    context.push('/mdp_reset');
+                  onPressed: () async {
+                    final localContext = context;
+                    final email = _identifierController.text.trim();
+                    if (email.isEmpty || !email.contains('@')) {
+                      showToast(
+                        localContext,
+                        'Veuillez entrer une adresse email valide',
+                      );
+                      return;
+                    }
+                    final success = await ref
+                        .read(authControllerProvider.notifier)
+                        .forgotPassword(email);
+                    if (!mounted) return;
+                    if (success) {
+                      showToast(localContext, 'Code envoyé à $email');
+                      localContext.push('/mdp_reset');
+                    } else {
+                      final message = ref.read(authControllerProvider).message;
+                      showToast(
+                        localContext,
+                        message ?? 'Impossible d\'envoyer le code',
+                      );
+                    }
                   },
                   child: const Text('Envoyer le code'),
                 ),
@@ -114,7 +156,10 @@ class MdpOublieScreen extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: traceCallback("mdp_oublie_screen.dart:116:onTap", () => context.push('/connexion')),
+                    onTap: traceCallback(
+                      "mdp_oublie_screen.dart:116:onTap",
+                      () => context.push('/connexion'),
+                    ),
                     child: Text(
                       'Se connecter',
                       style: TextStyle(

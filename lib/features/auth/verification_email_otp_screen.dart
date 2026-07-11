@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/toast.dart';
-import '../../services/supabase_service.dart';
+import '../../core/widgets/widgets.dart';
+import '../../providers/auth_controller.dart';
 
-class VerificationEmailOtpScreen extends StatefulWidget {
+class VerificationEmailOtpScreen extends ConsumerStatefulWidget {
   const VerificationEmailOtpScreen({super.key});
 
   @override
-  State<VerificationEmailOtpScreen> createState() =>
+  ConsumerState<VerificationEmailOtpScreen> createState() =>
       _VerificationEmailOtpScreenState();
 }
 
 class _VerificationEmailOtpScreenState
-    extends State<VerificationEmailOtpScreen> {
+    extends ConsumerState<VerificationEmailOtpScreen> {
   final TextEditingController _codeController = TextEditingController();
-  bool _isLoading = false;
-  bool _isResending = false;
   String? _email;
 
   @override
@@ -29,57 +29,63 @@ class _VerificationEmailOtpScreenState
   void didChangeDependencies() {
     super.didChangeDependencies();
     final extra = GoRouterState.of(context).extra;
-    debugPrint('VerificationEmailOtpScreen extras: $extra');
     if (extra is Map && extra['email'] is String) {
       _email = extra['email'] as String;
-      debugPrint('VerificationEmailOtpScreen email: $_email');
     }
   }
 
   Future<void> _verify() async {
+    final email =
+        _email ?? ref.read(authControllerProvider.notifier).pendingEmail;
     final code = _codeController.text.trim();
-    if (_email == null || code.isEmpty) {
+    if (email == null || code.isEmpty) {
       showToast(context, 'Veuillez entrer le code reçu par email');
       return;
     }
-    setState(() => _isLoading = true);
-    try {
-      await SupabaseService.verifyEmailOtp(_email!, code);
-      if (!mounted) return;
+    final success = await ref
+        .read(authControllerProvider.notifier)
+        .verifySignUpOtp(email, code);
+    if (!mounted) return;
+    if (success) {
       showToast(context, 'Compte vérifié');
       context.go('/onboarding');
-    } catch (e) {
-      if (!mounted) return;
-      showToast(context, 'Code invalide ou erreur : ${e.toString()}');
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
+      return;
+    }
+    final message = ref.read(authControllerProvider).message;
+    if (message != null) {
+      showToast(context, message);
     }
   }
 
   Future<void> _resendOtp() async {
-    if (_email == null) {
+    final email =
+        _email ?? ref.read(authControllerProvider.notifier).pendingEmail;
+    if (email == null) {
       showToast(context, 'Email manquant pour renvoyer le code');
       return;
     }
-    setState(() => _isResending = true);
-    try {
-      await SupabaseService.sendSignUpOtp(_email!);
-      if (!mounted) return;
-      showToast(context, 'Code renvoyé à $_email');
-    } catch (e) {
-      if (!mounted) return;
-      showToast(context, 'Erreur lors du renvoi : ${e.toString()}');
-    } finally {
-      if (mounted) setState(() => _isResending = false);
+    final success = await ref
+        .read(authControllerProvider.notifier)
+        .resendSignUpOtp(email);
+    if (!mounted) return;
+    final message = ref.read(authControllerProvider).message;
+    if (!success && message != null) {
+      showToast(context, message);
+      return;
     }
+    showToast(context, message ?? 'Code renvoyé.');
   }
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authControllerProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? AppTheme.bg : AppTheme.bgLight;
     final textColor = isDark ? AppTheme.text : AppTheme.textLight;
     final accentColor = isDark ? AppTheme.accent : AppTheme.accentLight;
+    final email =
+        _email ?? ref.read(authControllerProvider.notifier).pendingEmail;
+    final resendRemaining = authState.resendSecondsRemaining;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -104,22 +110,22 @@ class _VerificationEmailOtpScreenState
               ),
               const SizedBox(height: 12),
               Text(
-                'Un code a été envoyé à ${_email ?? 'votre email'}.',
+                'Un code a été envoyé à ${email ?? 'votre email'}.',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: textColor.withValues(alpha: 0.6)),
               ),
               const SizedBox(height: 18),
-              TextField(
+              OtpInput(
                 controller: _codeController,
-                decoration: InputDecoration(hintText: '123456'),
-                keyboardType: TextInputType.number,
+                label: 'CODE DE VÉRIFICATION',
+                hintText: '123456',
               ),
               const SizedBox(height: 18),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _isLoading ? null : _verify,
-                  child: _isLoading
+                  onPressed: authState.isLoading ? null : _verify,
+                  child: authState.isLoading
                       ? const SizedBox(
                           height: 20,
                           width: 20,
@@ -130,14 +136,18 @@ class _VerificationEmailOtpScreenState
               ),
               const SizedBox(height: 12),
               TextButton(
-                onPressed: _isResending ? null : _resendOtp,
-                child: _isResending
+                onPressed: authState.canResend ? _resendOtp : null,
+                child: authState.isLoading
                     ? const SizedBox(
                         height: 16,
                         width: 16,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Renvoyer le code'),
+                    : Text(
+                        resendRemaining > 0
+                            ? 'Renvoyer dans ${resendRemaining}s'
+                            : 'Renvoyer le code',
+                      ),
               ),
             ],
           ),

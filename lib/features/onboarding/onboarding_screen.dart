@@ -1,19 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
+import '../../providers/profile_provider.dart';
+import '../../services/supabase_service.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
-class OnboardingScreen extends StatelessWidget {
+
+class OnboardingScreen extends ConsumerWidget {
   const OnboardingScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? AppTheme.bg : AppTheme.bgLight;
     final textColor = isDark ? AppTheme.text : AppTheme.textLight;
     final accentColor = isDark ? AppTheme.accent : AppTheme.accentLight;
     final cardColor = isDark ? AppTheme.card : AppTheme.cardLight;
+
+    Future<void> _selectRole(String role, String destination) async {
+      final currentUser = SupabaseService.client.auth.currentUser;
+      if (currentUser == null) {
+        if (context.mounted) {
+          context.push('/connexion');
+        }
+        return;
+      }
+
+      await ref
+          .read(profileProvider.notifier)
+          .changeRoleActif(currentUser.id, role);
+      if (!context.mounted) return;
+      context.go(destination);
+    }
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -24,7 +44,10 @@ class OnboardingScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: traceCallback("onboarding_screen.dart:26:onTap", () => context.pop()),
+                onTap: traceCallback(
+                  "onboarding_screen.dart:26:onTap",
+                  () => context.pop(),
+                ),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 26),
@@ -62,7 +85,10 @@ class OnboardingScreen extends StatelessWidget {
                         title: 'Ménage / Commerce',
                         subtitle: 'Je trie, signale, gagne des points',
                         color: accentColor,
-                        onTap: traceCallback("onboarding_screen.dart:64:onTap", () => context.push('/tutoriel')),
+                        onTap: traceCallback(
+                          "onboarding_screen.dart:64:onTap",
+                          () => _selectRole('menage', '/tutoriel'),
+                        ),
                       ),
                       const SizedBox(height: 12),
                       _buildRoleCard(
@@ -71,7 +97,11 @@ class OnboardingScreen extends StatelessWidget {
                         title: 'Collecteur informel',
                         subtitle: 'Charrette, moto ou à pied',
                         color: AppTheme.plastic,
-                        onTap: traceCallback("onboarding_screen.dart:73:onTap", () => context.push('/accueil_collecteur')),
+                        onTap: traceCallback(
+                          "onboarding_screen.dart:73:onTap",
+                          () =>
+                              _selectRole('collecteur', '/accueil_collecteur'),
+                        ),
                       ),
                       const SizedBox(height: 12),
                       _buildRoleCard(
@@ -80,7 +110,10 @@ class OnboardingScreen extends StatelessWidget {
                         title: 'Filière de valorisation',
                         subtitle: 'Recycleur, compost, biogaz, e-waste',
                         color: AppTheme.organic,
-                        onTap: traceCallback("onboarding_screen.dart:82:onTap", () => context.push('/accueil_filiere')),
+                        onTap: traceCallback(
+                          "onboarding_screen.dart:82:onTap",
+                          () => _selectRole('filiere', '/accueil_filiere'),
+                        ),
                       ),
                       const SizedBox(height: 12),
                       _buildRoleCard(
@@ -89,7 +122,10 @@ class OnboardingScreen extends StatelessWidget {
                         title: 'Mairie / Collectivité',
                         subtitle: 'Dashboard B2G · pilotage territorial',
                         color: AppTheme.blue,
-                        onTap: traceCallback("onboarding_screen.dart:91:onTap", () => context.push('/dashboard_mairie')),
+                        onTap: traceCallback(
+                          "onboarding_screen.dart:91:onTap",
+                          () => _selectRole('mairie', '/dashboard_mairie'),
+                        ),
                       ),
                     ],
                   ),
@@ -121,9 +157,7 @@ class OnboardingScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: cardColor,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: color.withValues(alpha: 0.18),
-          ),
+          border: Border.all(color: color.withValues(alpha: 0.18)),
         ),
         child: Row(
           children: [
@@ -133,15 +167,9 @@ class OnboardingScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(13),
-                border: Border.all(
-                  color: color.withValues(alpha: 0.3),
-                ),
+                border: Border.all(color: color.withValues(alpha: 0.3)),
               ),
-              child: Icon(
-                icon,
-                color: color,
-                size: 22,
-              ),
+              child: Icon(icon, color: color, size: 22),
             ),
             const SizedBox(width: 13),
             Expanded(
@@ -170,11 +198,7 @@ class OnboardingScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: color,
-            ),
+            Icon(Icons.arrow_forward_ios, size: 16, color: color),
           ],
         ),
       ),

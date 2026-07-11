@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 import '../../core/widgets/toast.dart';
-import 'package:ecotrack/services/supabase_service.dart'; // Ensure SupabaseService is imported
+import '../../providers/auth_controller.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
 
-class InscriptionScreen extends StatefulWidget {
+class InscriptionScreen extends ConsumerStatefulWidget {
   const InscriptionScreen({super.key});
 
   @override
-  State<InscriptionScreen> createState() => _InscriptionScreenState();
+  ConsumerState<InscriptionScreen> createState() => _InscriptionScreenState();
 }
 
-class _InscriptionScreenState extends State<InscriptionScreen> {
+class _InscriptionScreenState extends ConsumerState<InscriptionScreen> {
   String _method = 'tel';
-  bool _isLoading = false;
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -358,62 +358,61 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isLoading
-                      ? null
-                      : () async {
-                          final ctx = context;
-                          if (_method == 'tel') {
-                            showToast(
-                              ctx,
-                              'Inscription par téléphone bientôt disponible',
-                            );
-                            return;
-                          }
-                          final email = _emailController.text.trim();
-                          final password = _passwordController.text.trim();
-                          debugPrint(
-                            'Inscription: email=$email passwordSet=${password.isNotEmpty}',
-                          );
-                          if (email.isEmpty || password.isEmpty) {
-                            showToast(
-                              ctx,
-                              'Veuillez renseigner email et mot de passe',
-                            );
-                            return;
-                          }
-                          setState(() => _isLoading = true);
-                          try {
-                            await SupabaseService.sendSignUpOtp(email);
-                            debugPrint('Supabase OTP envoyé pour $email');
-                            if (ctx.mounted) {
-                              ctx.push(
-                                '/verification_email_otp',
-                                extra: {'email': email},
-                              );
-                            }
-                          } catch (e) {
-                            debugPrint('Erreur sendSignUpOtp: $e');
-                            if (ctx.mounted) {
-                              showToast(
-                                ctx,
-                                'Erreur lors de l\'envoi du code : ${e.toString()}',
-                              );
-                            }
-                          } finally {
-                            if (mounted) setState(() => _isLoading = false);
-                          }
-                        },
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Text('Vérifier et continuer →'),
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    final authState = ref.watch(authControllerProvider);
+                    final isLoading = authState.isLoading;
+                    return ElevatedButton(
+                      onPressed: isLoading
+                          ? null
+                          : () async {
+                              final localContext = context;
+                              if (_method == 'tel') {
+                                showToast(
+                                  localContext,
+                                  'Inscription par téléphone bientôt disponible',
+                                );
+                                return;
+                              }
+                              final email = _emailController.text.trim();
+                              final password = _passwordController.text.trim();
+                              if (email.isEmpty || password.isEmpty) {
+                                showToast(
+                                  localContext,
+                                  'Veuillez renseigner email et mot de passe',
+                                );
+                                return;
+                              }
+                              final success = await ref
+                                  .read(authControllerProvider.notifier)
+                                  .signUp(email, password);
+                              if (!mounted) return;
+                              if (success) {
+                                localContext.pushNamed(
+                                  'verification_email_otp',
+                                  extra: {'email': email},
+                                );
+                              } else {
+                                final message = ref
+                                    .read(authControllerProvider)
+                                    .message;
+                                if (message != null) {
+                                  showToast(localContext, message);
+                                }
+                              }
+                            },
+                      child: isLoading
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Text('Vérifier et continuer →'),
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 16),

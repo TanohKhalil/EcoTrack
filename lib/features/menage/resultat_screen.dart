@@ -16,6 +16,7 @@ class ResultatScreen extends StatelessWidget {
     final aiResult =
         result ??
         AiAnalysisService.buildResultFromInput(userText: 'déchet détecté');
+    final screenWidth = MediaQuery.of(context).size.width;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? AppTheme.bg : AppTheme.bgLight;
     final textColor = isDark ? AppTheme.text : AppTheme.textLight;
@@ -30,6 +31,7 @@ class ResultatScreen extends StatelessWidget {
         : aiResult.category.contains('MÉTAL')
         ? AppTheme.gold
         : accentColor;
+    final contentPadding = screenWidth > 460 ? 24.0 : 18.0;
 
     return Scaffold(
       backgroundColor: bgColor,
