@@ -3,8 +3,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../services/supabase_service.dart';
 
-final authProvider = StreamProvider<User?>((ref) {
-  return SupabaseService.client.auth.onAuthStateChange.map(
+final authProvider = StreamProvider<User?>((ref) async* {
+  yield SupabaseService.client.auth.currentUser;
+  yield* SupabaseService.client.auth.onAuthStateChange.map(
     (event) => event.session?.user,
   );
 });

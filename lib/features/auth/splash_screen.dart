@@ -59,15 +59,19 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       backgroundColor: bgColor,
       body: SafeArea(
-        child: Column(
-          children: [
-            // Ligne du haut : badge supprimé
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Ligne du haut : badge supprimé
 
-            // Bloc central : parfaitement centré dans l'espace restant
-            Expanded(
-              child: Center(
+              // Bloc central : parfaitement centré dans l'espace restant
+              Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 48,
+                  ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -184,66 +188,67 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                 ),
               ),
-            ),
 
-            // Bas de l'écran : bouton + lien (position fixe, pas de Spacer)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(32, 0, 32, 24),
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: traceCallback(
-                        "splash_screen.dart:234:onPressed",
-                        () => context.push('/inscription'),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: accentColor,
-                        foregroundColor: buttonForegroundColor,
-                        elevation: 0,
-                        padding: const EdgeInsets.symmetric(vertical: 18),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+              // Bas de l'écran : bouton + lien (position fixe, pas de Spacer)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(32, 0, 32, 24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: traceCallback(
+                          "splash_screen.dart:234:onPressed",
+                          () => context.push('/inscription'),
                         ),
-                      ),
-                      child: const Text(
-                        'Commencer',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: accentColor,
+                          foregroundColor: buttonForegroundColor,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(vertical: 18),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Déjà membre ? ',
-                        style: TextStyle(fontSize: 14, color: subtitleColor),
-                      ),
-                      GestureDetector(
-                        onTap: traceCallback(
-                          "splash_screen.dart:262:onTap",
-                          () => context.push('/connexion'),
-                        ),
-                        child: Text(
-                          'Se connecter',
+                        child: const Text(
+                          'Commencer',
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 16,
                             fontWeight: FontWeight.w700,
-                            color: accentColor,
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Déjà membre ? ',
+                          style: TextStyle(fontSize: 14, color: subtitleColor),
+                        ),
+                        GestureDetector(
+                          onTap: traceCallback(
+                            "splash_screen.dart:262:onTap",
+                            () => context.push('/connexion'),
+                          ),
+                          child: Text(
+                            'Se connecter',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: accentColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

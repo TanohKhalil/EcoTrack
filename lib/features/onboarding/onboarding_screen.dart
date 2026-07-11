@@ -19,7 +19,7 @@ class OnboardingScreen extends ConsumerWidget {
     final accentColor = isDark ? AppTheme.accent : AppTheme.accentLight;
     final cardColor = isDark ? AppTheme.card : AppTheme.cardLight;
 
-    Future<void> _selectRole(String role, String destination) async {
+    Future<void> selectRole(String role) async {
       final currentUser = SupabaseService.client.auth.currentUser;
       if (currentUser == null) {
         if (context.mounted) {
@@ -32,7 +32,7 @@ class OnboardingScreen extends ConsumerWidget {
           .read(profileProvider.notifier)
           .changeRoleActif(currentUser.id, role);
       if (!context.mounted) return;
-      context.go(destination);
+      context.go('/tutoriel');
     }
 
     return Scaffold(
@@ -87,7 +87,7 @@ class OnboardingScreen extends ConsumerWidget {
                         color: accentColor,
                         onTap: traceCallback(
                           "onboarding_screen.dart:64:onTap",
-                          () => _selectRole('menage', '/tutoriel'),
+                          () => selectRole('menage'),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -99,8 +99,7 @@ class OnboardingScreen extends ConsumerWidget {
                         color: AppTheme.plastic,
                         onTap: traceCallback(
                           "onboarding_screen.dart:73:onTap",
-                          () =>
-                              _selectRole('collecteur', '/accueil_collecteur'),
+                          () => selectRole('collecteur'),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -112,7 +111,7 @@ class OnboardingScreen extends ConsumerWidget {
                         color: AppTheme.organic,
                         onTap: traceCallback(
                           "onboarding_screen.dart:82:onTap",
-                          () => _selectRole('filiere', '/accueil_filiere'),
+                          () => selectRole('filiere'),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -124,7 +123,7 @@ class OnboardingScreen extends ConsumerWidget {
                         color: AppTheme.blue,
                         onTap: traceCallback(
                           "onboarding_screen.dart:91:onTap",
-                          () => _selectRole('mairie', '/dashboard_mairie'),
+                          () => selectRole('mairie'),
                         ),
                       ),
                     ],

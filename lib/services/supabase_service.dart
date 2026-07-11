@@ -109,6 +109,7 @@ class SupabaseService {
           'user_id': userId,
           'role_actif': roleActif,
           'roles_disponibles': [roleActif],
+          'onboarding_completed': true,
         }, onConflict: 'user_id')
         .select()
         .maybeSingle();
@@ -303,15 +304,15 @@ class SupabaseService {
 
   static Future<void> createCommande(
     String userId,
-    int totalPoints,
+    int totalFcfa,
     List<Map<String, dynamic>> lignesCommande,
   ) async {
     final Map<String, dynamic>? record = await client
         .from('commandes')
         .insert({
           'user_id': userId,
-          'total_points': totalPoints,
-          'statut': 'pending',
+          'total_fcfa': totalFcfa,
+          'statut': 'en_attente',
           'created_at': DateTime.now().toIso8601String(),
         })
         .select()
@@ -341,12 +342,12 @@ class SupabaseService {
 
   static Future<void> createEchangePoints(
     String userId,
-    String rewardId,
+    String recompenseId,
   ) async {
     await client.from('echanges_points').insert({
       'user_id': userId,
-      'reward_id': rewardId,
-      'statut': 'demandé',
+      'recompense_id': recompenseId,
+      'status': 'demande',
       'requested_at': DateTime.now().toIso8601String(),
       'updated_at': DateTime.now().toIso8601String(),
     });
@@ -368,7 +369,7 @@ class SupabaseService {
   static Future<void> markAllRead(String userId) async {
     await client
         .from('notifications')
-        .update({'read': true})
+        .update({'lu': true})
         .eq('user_id', userId);
   }
 

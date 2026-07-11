@@ -108,12 +108,12 @@ class AuthController extends StateNotifier<AuthState> {
     try {
       await SupabaseService.verifyOtp(email, token, OtpType.signup);
       if (pendingPassword != null) {
-        final signInResponse = await SupabaseService.signInWithEmail(
+        final response = await SupabaseService.signInWithEmail(
           email,
           pendingPassword!,
         );
         pendingPassword = null;
-        if (signInResponse.session == null) {
+        if (response.session == null) {
           _setError('La vérification a réussi, mais la connexion a échoué.');
           return false;
         }

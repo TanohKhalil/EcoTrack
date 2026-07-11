@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
+import '../../providers/profile_provider.dart';
+import '../../services/supabase_service.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
-class TutorielScreen extends StatelessWidget {
+
+class TutorielScreen extends ConsumerWidget {
   const TutorielScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? AppTheme.bg : AppTheme.bgLight;
     final textColor = isDark ? AppTheme.text : AppTheme.textLight;
@@ -72,13 +76,52 @@ class TutorielScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: traceCallback("tutoriel_screen.dart:74:onPressed", () => context.push('/accueil_menage')),
+                  onPressed: traceCallback(
+                    "tutoriel_screen.dart:74:onPressed",
+                    () {
+                      final currentUser =
+                          SupabaseService.client.auth.currentUser;
+                      if (currentUser == null) {
+                        context.push('/connexion');
+                        return;
+                      }
+                      final profileState = ref.read(profileProvider);
+                      final roleActif =
+                          profileState.asData?.value?.roleActif ?? '';
+                      if (roleActif == 'collecteur') {
+                        context.push('/accueil_collecteur');
+                      } else if (roleActif == 'filiere') {
+                        context.push('/accueil_filiere');
+                      } else if (roleActif == 'mairie') {
+                        context.push('/dashboard_mairie');
+                      } else {
+                        context.push('/accueil_menage');
+                      }
+                    },
+                  ),
                   child: const Text('Commencer'),
                 ),
               ),
               const SizedBox(height: 14),
               GestureDetector(
-                onTap: traceCallback("tutoriel_screen.dart:80:onTap", () => context.push('/accueil_menage')),
+                onTap: traceCallback("tutoriel_screen.dart:80:onTap", () {
+                  final currentUser = SupabaseService.client.auth.currentUser;
+                  if (currentUser == null) {
+                    context.push('/connexion');
+                    return;
+                  }
+                  final profileState = ref.read(profileProvider);
+                  final roleActif = profileState.asData?.value?.roleActif ?? '';
+                  if (roleActif == 'collecteur') {
+                    context.push('/accueil_collecteur');
+                  } else if (roleActif == 'filiere') {
+                    context.push('/accueil_filiere');
+                  } else if (roleActif == 'mairie') {
+                    context.push('/dashboard_mairie');
+                  } else {
+                    context.push('/accueil_menage');
+                  }
+                }),
                 child: Center(
                   child: Text(
                     'Passer',

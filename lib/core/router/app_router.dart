@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../features/auth/splash_screen.dart';
+import '../../models/app_user.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/profile_provider.dart';
 import '../../features/auth/inscription_screen.dart';
@@ -71,6 +73,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         '/mdp_confirmation',
         '/verification_email',
         '/verification_email_otp',
+        '/onboarding',
+      };
+
+      // Chemins autorisés PENDANT le parcours d'inscription,
+      // tant que onboarding_completed vaut false.
+      final signupFlowRoutes = <String>{
+        '/infos_perso',
+        '/onboarding',
+        '/tutoriel',
       };
 
       final currentPath = state.uri.path;
@@ -82,13 +93,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         final profileState = ref.watch(profileProvider);
         return profileState.when(
           data: (profile) {
+            // onboardingCompleted est la SEULE source de vérité pour
+            // savoir si l'utilisateur a réellement terminé son inscription
+            // (infos perso + choix du rôle). roleActif peut être null
+            // tant que ce n'est pas fait.
+            // onboardingCompleted n'existe pas sur AppUser : utiliser roleActif
+            final onboardingCompleted = (profile?.roleActif ?? '').isNotEmpty;
             final roleActif = profile?.roleActif ?? '';
-            if (roleActif.isEmpty && currentPath != '/onboarding') {
-              return '/onboarding';
+
+            // Onboarding pas encore terminé -> laisser l'utilisateur avancer
+            // dans le parcours infos_perso -> onboarding -> tutoriel,
+            // mais bloquer l'accès direct aux écrans internes de l'app.
+            if (!onboardingCompleted) {
+              if (signupFlowRoutes.contains(currentPath)) {
+                return null;
+              }
+              return '/infos_perso';
             }
-            if (roleActif.isNotEmpty &&
+
+            // Onboarding terminé -> ne jamais laisser l'utilisateur revenir
+            // sur les pages publiques / onboarding / infos_perso / tutoriel
+            if (onboardingCompleted &&
                 (publicRoutes.contains(currentPath) ||
-                    currentPath == '/onboarding')) {
+                    signupFlowRoutes.contains(currentPath))) {
               if (roleActif == 'collecteur') {
                 return '/accueil_collecteur';
               }
@@ -180,8 +207,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'analyse',
         builder: (context, state) => AnalyseScreen(
           key: state.pageKey,
-          // state.extra may contain an image path from the scanner
-          // pass it to the screen if available
           imagePath: state.extra is String ? state.extra as String : null,
         ),
       ),
@@ -335,17 +360,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
 class GoRouterRefreshNotifier extends ChangeNotifier {
   GoRouterRefreshNotifier(this._ref) {
-    _subscription = _ref.watch(authProvider.stream).listen((_) {
+    _ref.listen<AsyncValue<User?>>(authProvider, (previous, next) {
+      notifyListeners();
+    });
+    _ref.listen<AsyncValue<AppUser?>>(profileProvider, (previous, next) {
       notifyListeners();
     });
   }
 
   final Ref _ref;
-  late final StreamSubscription<dynamic> _subscription;
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
-  }
 }

@@ -1,21 +1,77 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 import '../../core/widgets/toast.dart';
+import '../../services/supabase_service.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
-class InfosPersoScreen extends StatefulWidget {
+
+class InfosPersoScreen extends ConsumerStatefulWidget {
   const InfosPersoScreen({super.key});
 
   @override
-  State<InfosPersoScreen> createState() => _InfosPersoScreenState();
+  ConsumerState<InfosPersoScreen> createState() => _InfosPersoScreenState();
 }
 
-class _InfosPersoScreenState extends State<InfosPersoScreen> {
+class _InfosPersoScreenState extends ConsumerState<InfosPersoScreen> {
+  final TextEditingController _prenomController = TextEditingController();
+  final TextEditingController _nomController = TextEditingController();
   bool _cguAccepted = false;
+  bool _isSaving = false;
   String _locationStatus = 'Position non détectée';
+  String? _localisationValue;
+
+  @override
+  void dispose() {
+    _prenomController.dispose();
+    _nomController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (!_cguAccepted) {
+      showToast(context, 'Veuillez accepter les CGU pour continuer');
+      return;
+    }
+    if (_prenomController.text.trim().isEmpty ||
+        _nomController.text.trim().isEmpty) {
+      showToast(context, 'Veuillez renseigner votre prénom et nom');
+      return;
+    }
+
+    setState(() => _isSaving = true);
+
+    try {
+      final userId = SupabaseService.client.auth.currentUser?.id;
+      if (userId == null) {
+        if (mounted) {
+          showToast(context, 'Session expirée, veuillez vous reconnecter');
+        }
+        return;
+      }
+
+      await SupabaseService.client
+          .from('profiles')
+          .update({
+            'prenom': _prenomController.text.trim(),
+            'nom': _nomController.text.trim(),
+            'localisation': _localisationValue,
+          })
+          .eq('user_id', userId);
+
+      if (!mounted) return;
+      context.push('/onboarding');
+    } catch (e) {
+      if (mounted) {
+        showToast(context, 'Erreur lors de l\'enregistrement : $e');
+      }
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +90,10 @@ class _InfosPersoScreenState extends State<InfosPersoScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: traceCallback("infos_perso_screen.dart:36:onTap", () => context.pop()),
+                onTap: traceCallback(
+                  "infos_perso_screen.dart:36:onTap",
+                  () => context.pop(),
+                ),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 26),
@@ -71,6 +130,7 @@ class _InfosPersoScreenState extends State<InfosPersoScreen> {
                         const Eyebrow(text: 'PRÉNOM'),
                         const SizedBox(height: 8),
                         TextField(
+                          controller: _prenomController,
                           decoration: _inputDecoration('Aya'),
                           style: _inputStyle(),
                         ),
@@ -85,6 +145,7 @@ class _InfosPersoScreenState extends State<InfosPersoScreen> {
                         const Eyebrow(text: 'NOM'),
                         const SizedBox(height: 8),
                         TextField(
+                          controller: _nomController,
                           decoration: _inputDecoration('Konan'),
                           style: _inputStyle(),
                         ),
@@ -154,7 +215,10 @@ class _InfosPersoScreenState extends State<InfosPersoScreen> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        setState(() => _locationStatus = 'Cocody, Abidjan');
+                        setState(() {
+                          _locationStatus = 'Cocody, Abidjan';
+                          _localisationValue = 'Cocody, Abidjan';
+                        });
                         showToast(context, 'Localisation confirmée : Cocody');
                       },
                       style: ElevatedButton.styleFrom(
@@ -215,17 +279,14 @@ class _InfosPersoScreenState extends State<InfosPersoScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    if (!_cguAccepted) {
-                      showToast(
-                        context,
-                        'Veuillez accepter les CGU pour continuer',
-                      );
-                      return;
-                    }
-                    context.push('/onboarding');
-                  },
-                  child: const Text('Terminer l\'inscription'),
+                  onPressed: _isSaving ? null : _submit,
+                  child: _isSaving
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Terminer l\'inscription'),
                 ),
               ),
             ],

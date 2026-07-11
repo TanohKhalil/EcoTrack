@@ -5,6 +5,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/toast.dart';
 import '../../core/widgets/widgets.dart';
 import '../../providers/auth_controller.dart';
+import '../../providers/auth_provider.dart';
 
 class VerificationEmailOtpScreen extends ConsumerStatefulWidget {
   const VerificationEmailOtpScreen({super.key});
@@ -48,7 +49,15 @@ class _VerificationEmailOtpScreenState
     if (!mounted) return;
     if (success) {
       showToast(context, 'Compte vérifié');
-      context.go('/onboarding');
+      // Wait for the authProvider to settle with a logged-in user.
+      try {
+        await ref.read(authProvider.future).timeout(const Duration(seconds: 3));
+      } catch (_) {
+        // timed out or failed — proceed anyway
+      }
+      if (!mounted) return;
+      // Corrigé : on va d'abord chercher les infos perso avant l'onboarding
+      context.go('/infos_perso');
       return;
     }
     final message = ref.read(authControllerProvider).message;
