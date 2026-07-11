@@ -1,11 +1,11 @@
 {
-    "name": "ecotrack",
-    "short_name": "ecotrack",
+    "name": "EcoTrack",
+    "short_name": "EcoTrack",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#ECF7EC",
+    "theme_color": "#2E7D32",
+    "description": "EcoTrack - Suivez et g\u00e9rez votre impact \u00e9cologique au quotidien",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

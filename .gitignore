@@ -47,3 +47,4 @@ app.*.map.json
 
 #variable environnement 
 env.json
+env
