@@ -1,6 +1,11 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/splash_screen.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/profile_provider.dart';
 import '../../features/auth/inscription_screen.dart';
 import '../../features/auth/infos_perso_screen.dart';
 import '../../features/auth/connexion_screen.dart';
@@ -8,6 +13,7 @@ import '../../features/auth/mdp_oublie_screen.dart';
 import '../../features/auth/mdp_reset_screen.dart';
 import '../../features/auth/mdp_confirmation_screen.dart';
 import '../../features/auth/verification_email_screen.dart';
+import '../../features/auth/verification_email_otp_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/onboarding/tutoriel_screen.dart';
 import '../../features/menage/accueil_menage_screen.dart';
@@ -41,10 +47,56 @@ import '../../features/commun/aide_screen.dart';
 import '../../features/commun/cgu_screen.dart';
 import '../../features/commun/erreur_camera_screen.dart';
 import '../../features/commun/erreur_reseau_screen.dart';
+import '../services/ai_analysis_service.dart';
 
-final appRouterProvider = Provider((ref) {
+final appRouterProvider = Provider<GoRouter>((ref) {
+  final refreshNotifier = GoRouterRefreshNotifier(ref);
   return GoRouter(
+    refreshListenable: refreshNotifier,
     initialLocation: '/',
+    redirect: (context, state) {
+      final authState = ref.watch(authProvider);
+      final isLoggedIn = authState.maybeWhen(
+        data: (user) => user != null,
+        orElse: () => false,
+      );
+
+      final authRoutes = <String>{
+        '/',
+        '/connexion',
+        '/inscription',
+        '/infos_perso',
+        '/mdp_oublie',
+        '/mdp_reset',
+        '/mdp_confirmation',
+        '/verification_email',
+        '/verification_email_otp',
+      };
+
+      if (!isLoggedIn && !authRoutes.contains(state.uri.toString())) {
+        return '/';
+      }
+
+      if (isLoggedIn && authRoutes.contains(state.uri.toString())) {
+        final profileState = ref.watch(profileProvider);
+        final roleActif = profileState.maybeWhen(
+          data: (profile) => profile?.roleActif ?? '',
+          orElse: () => '',
+        );
+        if (roleActif == 'collecteur') {
+          return '/accueil_collecteur';
+        }
+        if (roleActif == 'filiere') {
+          return '/accueil_filiere';
+        }
+        if (roleActif == 'mairie') {
+          return '/dashboard_mairie';
+        }
+        return '/accueil_menage';
+      }
+
+      return null;
+    },
     routes: [
       GoRoute(
         path: '/',
@@ -87,6 +139,11 @@ final appRouterProvider = Provider((ref) {
         builder: (context, state) => const VerificationEmailScreen(),
       ),
       GoRoute(
+        path: '/verification_email_otp',
+        name: 'verification_email_otp',
+        builder: (context, state) => const VerificationEmailOtpScreen(),
+      ),
+      GoRoute(
         path: '/onboarding',
         name: 'onboarding',
         builder: (context, state) => const OnboardingScreen(),
@@ -119,7 +176,11 @@ final appRouterProvider = Provider((ref) {
       GoRoute(
         path: '/resultat',
         name: 'resultat',
-        builder: (context, state) => const ResultatScreen(),
+        builder: (context, state) => ResultatScreen(
+          result: state.extra is AiClassificationResult
+              ? state.extra as AiClassificationResult
+              : null,
+        ),
       ),
       GoRoute(
         path: '/signalement',
@@ -259,3 +320,20 @@ final appRouterProvider = Provider((ref) {
     ],
   );
 });
+
+class GoRouterRefreshNotifier extends ChangeNotifier {
+  GoRouterRefreshNotifier(this._ref) {
+    _subscription = _ref.watch(authProvider.stream).listen((_) {
+      notifyListeners();
+    });
+  }
+
+  final Ref _ref;
+  late final StreamSubscription<dynamic> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+}

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
+import '../../core/services/ai_analysis_service.dart';
 
 class AnalyseScreen extends StatefulWidget {
   final String? imagePath;
@@ -23,8 +24,9 @@ class _AnalyseScreenState extends State<AnalyseScreen> {
         : const Duration(seconds: 3);
     Future.delayed(duration, () {
       if (!mounted) return;
-      // pass imagePath to resultat if present
-      context.push('/resultat', extra: widget.imagePath);
+      final input = widget.imagePath ?? 'déchet détecté';
+      final result = AiAnalysisService.buildResultFromInput(userText: input);
+      context.push('/resultat', extra: result);
     });
   }
 

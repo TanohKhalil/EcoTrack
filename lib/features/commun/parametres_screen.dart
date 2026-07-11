@@ -5,6 +5,7 @@ import '../../core/widgets/widgets.dart';
 import '../../core/widgets/toast.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
+
 class ParametresScreen extends StatefulWidget {
   const ParametresScreen({super.key});
 
@@ -35,7 +36,10 @@ class _ParametresScreenState extends State<ParametresScreen> {
               Row(
                 children: [
                   IconBtn(
-                    onTap: traceCallback("parametres_screen.dart:37:onTap", () => context.pop()),
+                    onTap: traceCallback(
+                      "parametres_screen.dart:37:onTap",
+                      () => context.pop(),
+                    ),
                     icon: Icons.arrow_back_ios_new,
                   ),
                   const SizedBox(width: 12),
@@ -117,7 +121,13 @@ class _ParametresScreenState extends State<ParametresScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
+                    final navigator = Navigator.of(context);
                     showToast(context, 'Paramètres enregistrés');
+                    Future.delayed(const Duration(milliseconds: 600), () {
+                      if (navigator.context.mounted) {
+                        navigator.pop();
+                      }
+                    });
                   },
                   child: const Text('Enregistrer'),
                 ),
@@ -232,7 +242,10 @@ class _ParametresScreenState extends State<ParametresScreen> {
             ),
           ),
           GestureDetector(
-            onTap: traceCallback("parametres_screen.dart:234:onTap", () => onChanged(!value)),
+            onTap: traceCallback(
+              "parametres_screen.dart:234:onTap",
+              () => onChanged(!value),
+            ),
             child: Container(
               width: 40,
               height: 22,

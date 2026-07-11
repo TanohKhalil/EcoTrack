@@ -139,6 +139,7 @@ class _SplashScreenState extends State<SplashScreen>
                                 'assets/images/logo.svg',
                                 width: 110,
                                 height: 110,
+                                fit: BoxFit.contain,
                               ),
                             ),
                           ],

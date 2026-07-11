@@ -4,6 +4,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
+
 class PaiementCommandeScreen extends StatefulWidget {
   const PaiementCommandeScreen({super.key});
 
@@ -31,7 +32,10 @@ class _PaiementCommandeScreenState extends State<PaiementCommandeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: traceCallback("paiement_commande_screen.dart:33:onTap", () => context.pop()),
+                onTap: traceCallback(
+                  "paiement_commande_screen.dart:33:onTap",
+                  () => context.pop(),
+                ),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 22),
@@ -54,7 +58,10 @@ class _PaiementCommandeScreenState extends State<PaiementCommandeScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: traceCallback("paiement_commande_screen.dart:56:onPressed", () => context.push('/confirmation_commande')),
+                  onPressed: traceCallback(
+                    "paiement_commande_screen.dart:56:onPressed",
+                    () => context.push('/confirmation_commande'),
+                  ),
                   child: const Text('Confirmer la commande'),
                 ),
               ),
@@ -74,7 +81,10 @@ class _PaiementCommandeScreenState extends State<PaiementCommandeScreen> {
     final isSelected = _selectedMethod == value;
 
     return GestureDetector(
-      onTap: traceCallback("paiement_commande_screen.dart:76:onTap", () => setState(() => _selectedMethod = value)),
+      onTap: traceCallback(
+        "paiement_commande_screen.dart:76:onTap",
+        () => setState(() => _selectedMethod = value),
+      ),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
         decoration: BoxDecoration(
@@ -92,7 +102,9 @@ class _PaiementCommandeScreenState extends State<PaiementCommandeScreen> {
             Icon(
               value == 'mobile' ? Icons.credit_card : Icons.money,
               size: 18,
-              color: isSelected ? accentColor : textColor.withValues(alpha: 0.6),
+              color: isSelected
+                  ? accentColor
+                  : textColor.withValues(alpha: 0.6),
             ),
             const SizedBox(width: 11),
             Expanded(
@@ -107,11 +119,7 @@ class _PaiementCommandeScreenState extends State<PaiementCommandeScreen> {
               ),
             ),
             if (isSelected)
-              const Icon(
-                Icons.check,
-                color: AppTheme.accent,
-                size: 15,
-              ),
+              const Icon(Icons.check, color: AppTheme.accent, size: 15),
           ],
         ),
       ),

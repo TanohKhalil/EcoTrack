@@ -5,6 +5,7 @@ import '../../core/widgets/widgets.dart';
 import '../../core/widgets/toast.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
+
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
 
@@ -13,7 +14,7 @@ class NotificationsScreen extends StatefulWidget {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
-  bool _allRead = false;
+  final List<bool> _readStates = [false, false, true];
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   Row(
                     children: [
                       IconBtn(
-                        onTap: traceCallback("notifications_screen.dart:40:onTap", () => context.pop()),
+                        onTap: traceCallback(
+                          "notifications_screen.dart:40:onTap",
+                          () => context.pop(),
+                        ),
                         icon: Icons.arrow_back_ios_new,
                       ),
                       const SizedBox(width: 12),
@@ -55,7 +59,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      setState(() => _allRead = true);
+                      setState(() {
+                        for (var i = 0; i < _readStates.length; i++) {
+                          _readStates[i] = true;
+                        }
+                      });
                       showToast(
                         context,
                         'Toutes les notifications sont marquées comme lues',
@@ -74,22 +82,37 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 ],
               ),
               const SizedBox(height: 18),
-              _buildNotification(
-                'Le collecteur Ibrahim arrive dans 15 min',
-                'Il y a 2 min',
-                accentColor,
-                false,
-              ),
-              const SizedBox(height: 10),
-              _buildNotification(
-                '+25 points crédités — tri organique',
-                'Aujourd\'hui, 09:14',
-                goldColor,
-                false,
+              GestureDetector(
+                onTap: () {
+                  setState(() => _readStates[0] = true);
+                  showToast(context, 'Notification marquée comme lue');
+                },
+                child: _buildNotification(
+                  'Le collecteur Ibrahim arrive dans 15 min',
+                  'Il y a 2 min',
+                  accentColor,
+                  _readStates[0],
+                ),
               ),
               const SizedBox(height: 10),
               GestureDetector(
-                onTap: traceCallback("notifications_screen.dart:91:onTap", () => context.push('/suivi_signalement')),
+                onTap: () {
+                  setState(() => _readStates[1] = true);
+                  showToast(context, 'Notification marquée comme lue');
+                },
+                child: _buildNotification(
+                  '+25 points crédités — tri organique',
+                  'Aujourd\'hui, 09:14',
+                  goldColor,
+                  _readStates[1],
+                ),
+              ),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: traceCallback(
+                  "notifications_screen.dart:91:onTap",
+                  () => context.push('/suivi_signalement'),
+                ),
                 child: _buildNotification(
                   'Votre signalement a été traité',
                   'Hier, 17:40',

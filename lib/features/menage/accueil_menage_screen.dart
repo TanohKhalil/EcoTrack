@@ -71,6 +71,7 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
                                 'assets/images/logo.svg',
                                 width: 34,
                                 height: 34,
+                                fit: BoxFit.contain,
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -365,7 +366,12 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
                     // Stats
                     Row(
                       children: [
-                        _buildStatCard('1 240', 'points', accentColor),
+                        _buildStatCard(
+                          '1 240',
+                          'points',
+                          accentColor,
+                          onTap: () => context.push('/impact_carbone'),
+                        ),
                         const SizedBox(width: 9),
                         _buildStatCard(
                           '38 kg',
@@ -377,7 +383,12 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
                           ),
                         ),
                         const SizedBox(width: 9),
-                        _buildStatCard('6', 'collectes', textColor),
+                        _buildStatCard(
+                          '6',
+                          'collectes',
+                          textColor,
+                          onTap: () => context.push('/historique'),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 26),
@@ -632,10 +643,14 @@ class _AccueilMenageScreenState extends ConsumerState<AccueilMenageScreen>
 
     return GestureDetector(
       onTap: () {
+        final router = GoRouter.of(context);
         showToast(
           context,
           'Récompense « $title » échangée contre $points points',
         );
+        Future.delayed(const Duration(milliseconds: 600), () {
+          router.push('/marketplace');
+        });
       },
       child: Container(
         width: 150,

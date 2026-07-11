@@ -6,6 +6,7 @@ import '../../core/widgets/toast.dart';
 import '../../core/constants/mock_data.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
+
 class AccueilCollecteurScreen extends StatelessWidget {
   const AccueilCollecteurScreen({super.key});
 
@@ -31,7 +32,10 @@ class AccueilCollecteurScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconBtn(
-                    onTap: traceCallback("accueil_collecteur_screen.dart:33:onTap", () => context.pop()),
+                    onTap: traceCallback(
+                      "accueil_collecteur_screen.dart:33:onTap",
+                      () => context.pop(),
+                    ),
                     icon: Icons.arrow_back_ios_new,
                   ),
                   Container(
@@ -57,7 +61,10 @@ class AccueilCollecteurScreen extends StatelessWidget {
                     ),
                   ),
                   IconBtn(
-                    onTap: traceCallback("accueil_collecteur_screen.dart:59:onTap", () => context.push('/profil')),
+                    onTap: traceCallback(
+                      "accueil_collecteur_screen.dart:59:onTap",
+                      () => context.push('/profil'),
+                    ),
                     icon: Icons.person_outline,
                     color: textColor,
                   ),
@@ -137,7 +144,10 @@ class AccueilCollecteurScreen extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: traceCallback("accueil_collecteur_screen.dart:139:onPressed", () => context.push('/carte')),
+                        onPressed: traceCallback(
+                          "accueil_collecteur_screen.dart:139:onPressed",
+                          () => context.push('/carte'),
+                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: plasticColor,
                           foregroundColor: const Color(0xFF04222E),
@@ -153,7 +163,10 @@ class AccueilCollecteurScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: traceCallback("accueil_collecteur_screen.dart:155:onTap", () => context.push('/retrait_collecteur')),
+                      onTap: traceCallback(
+                        "accueil_collecteur_screen.dart:155:onTap",
+                        () => context.push('/retrait_collecteur'),
+                      ),
                       child: Container(
                         padding: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
@@ -293,13 +306,18 @@ class AccueilCollecteurScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  arret.lieu,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: textColor,
-                    fontFamily: 'Space Grotesk',
+                GestureDetector(
+                  onTap: () {
+                    showToast(context, 'Ouverture du détail de ${arret.lieu}');
+                  },
+                  child: Text(
+                    arret.lieu,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: textColor,
+                      fontFamily: 'Space Grotesk',
+                    ),
                   ),
                 ),
                 Text(
@@ -330,7 +348,8 @@ class AccueilCollecteurScreen extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        showToast(context, 'Lecture de la formation : $title');
+        showToast(context, 'Ouverture de la formation : $title');
+        context.push('/aide');
       },
       child: Container(
         width: 132,

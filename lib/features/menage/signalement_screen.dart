@@ -224,7 +224,19 @@ class _SignalementScreenState extends State<SignalementScreen> {
                 child: ElevatedButton(
                   onPressed: traceCallback(
                     "signalement_screen.dart:197:onPressed",
-                    () => context.push('/signalement_doublon'),
+                    () {
+                      final text = _controller.text.trim().toLowerCase();
+                      final isDuplicate =
+                          text.contains('déjà') ||
+                          text.contains('doublon') ||
+                          text.contains('déjà signal') ||
+                          text.contains('décharge');
+                      context.push(
+                        isDuplicate
+                            ? '/signalement_doublon'
+                            : '/confirmation_signalement',
+                      );
+                    },
                   ),
                   child: const Text('Envoyer le signalement'),
                 ),

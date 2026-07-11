@@ -3,8 +3,10 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 import '../../core/widgets/toast.dart';
+import 'package:ecotrack/services/supabase_service.dart'; // Ensure SupabaseService is imported
 
 import 'package:ecotrack/core/utils/trace.dart';
+
 class InscriptionScreen extends StatefulWidget {
   const InscriptionScreen({super.key});
 
@@ -14,6 +16,17 @@ class InscriptionScreen extends StatefulWidget {
 
 class _InscriptionScreenState extends State<InscriptionScreen> {
   String _method = 'tel';
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +45,10 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: traceCallback("inscription_screen.dart:34:onTap", () => context.pop()),
+                onTap: traceCallback(
+                  "inscription_screen.dart:34:onTap",
+                  () => context.pop(),
+                ),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 26),
@@ -64,7 +80,10 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: traceCallback("inscription_screen.dart:66:onTap", () => setState(() => _method = 'tel')),
+                      onTap: traceCallback(
+                        "inscription_screen.dart:66:onTap",
+                        () => setState(() => _method = 'tel'),
+                      ),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 7),
                         decoration: BoxDecoration(
@@ -96,7 +115,10 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: GestureDetector(
-                      onTap: traceCallback("inscription_screen.dart:98:onTap", () => setState(() => _method = 'email')),
+                      onTap: traceCallback(
+                        "inscription_screen.dart:98:onTap",
+                        () => setState(() => _method = 'email'),
+                      ),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 7),
                         decoration: BoxDecoration(
@@ -158,6 +180,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                     const SizedBox(width: 9),
                     Expanded(
                       child: TextField(
+                        controller: _phoneController,
                         decoration: InputDecoration(
                           hintText: '07 00 00 00 00',
                           hintStyle: TextStyle(
@@ -197,52 +220,41 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                const Eyebrow(text: 'CODE OTP (SMS)'),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    _buildOtpBox('4', true),
-                    const SizedBox(width: 9),
-                    _buildOtpBox('2', true),
-                    const SizedBox(width: 9),
-                    _buildOtpBox('·', false),
-                    const SizedBox(width: 9),
-                    _buildOtpBox('·', false),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Text(
-                      'Code envoyé au +225 07 •• •• •• 00 · ',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: textColor.withValues(alpha: 0.4),
-                        fontFamily: 'Space Grotesk',
-                      ),
+                // Phone sign-up not ready
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: cardColor,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: accentColor.withValues(alpha: 0.12),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        showToast(context, 'Nouveau code envoyé par SMS');
-                      },
-                      child: Text(
-                        'Renvoyer',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: accentColor,
-                          fontFamily: 'Space Grotesk',
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Inscription par téléphone — Bientôt disponible',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: textColor.withValues(alpha: 0.7),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                      ElevatedButton(
+                        onPressed: () =>
+                            showToast(context, 'Bientôt disponible'),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 18),
               ] else ...[
                 const Eyebrow(text: 'ADRESSE EMAIL'),
                 const SizedBox(height: 8),
                 TextField(
+                  controller: _emailController,
                   decoration: InputDecoration(
                     hintText: 'aya@exemple.ci',
                     hintStyle: TextStyle(
@@ -307,6 +319,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
               const Eyebrow(text: 'MOT DE PASSE'),
               const SizedBox(height: 8),
               TextField(
+                controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   hintText: '••••••••',
@@ -345,7 +358,46 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: traceCallback("inscription_screen.dart:347:onPressed", () => context.push('/infos_perso')),
+                  onPressed: () async {
+                    final ctx = context;
+                    if (_method == 'tel') {
+                      showToast(
+                        ctx,
+                        'Inscription par téléphone bientôt disponible',
+                      );
+                      return;
+                    }
+                    final email = _emailController.text.trim();
+                    final password = _passwordController.text.trim();
+                    debugPrint(
+                      'Inscription: email=$email passwordSet=${password.isNotEmpty}',
+                    );
+                    if (email.isEmpty || password.isEmpty) {
+                      showToast(
+                        ctx,
+                        'Veuillez renseigner email et mot de passe',
+                      );
+                      return;
+                    }
+                    try {
+                      await SupabaseService.sendSignUpOtp(email);
+                      debugPrint('Supabase OTP envoyé pour $email');
+                      if (ctx.mounted) {
+                        ctx.push(
+                          '/verification_email_otp',
+                          extra: {'email': email},
+                        );
+                      }
+                    } catch (e) {
+                      debugPrint('Erreur sendSignUpOtp: $e');
+                      if (ctx.mounted) {
+                        showToast(
+                          ctx,
+                          'Erreur lors de l\'envoi du code : ${e.toString()}',
+                        );
+                      }
+                    }
+                  },
                   child: const Text('Vérifier et continuer →'),
                 ),
               ),
@@ -363,7 +415,10 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: traceCallback("inscription_screen.dart:365:onTap", () => context.push('/connexion')),
+                    onTap: traceCallback(
+                      "inscription_screen.dart:365:onTap",
+                      () => context.push('/connexion'),
+                    ),
                     child: Text(
                       'Se connecter',
                       style: TextStyle(
@@ -383,36 +438,5 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
     );
   }
 
-  Widget _buildOtpBox(String value, bool active) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cardColor = isDark ? AppTheme.card : AppTheme.cardLight;
-    final accentColor = isDark ? AppTheme.accent : AppTheme.accentLight;
-    final textColor = isDark ? AppTheme.text : AppTheme.textLight;
-
-    return Expanded(
-      child: Container(
-        height: 54,
-        decoration: BoxDecoration(
-          color: cardColor,
-          borderRadius: BorderRadius.circular(13),
-          border: Border.all(
-            color: active
-                ? accentColor.withValues(alpha: 0.4)
-                : accentColor.withValues(alpha: 0.16),
-          ),
-        ),
-        child: Center(
-          child: Text(
-            value,
-            style: TextStyle(
-              fontSize: 21,
-              fontWeight: FontWeight.w600,
-              color: active ? accentColor : textColor.withValues(alpha: 0.5),
-              fontFamily: 'Space Grotesk',
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  // OTP box helper removed (unused)
 }

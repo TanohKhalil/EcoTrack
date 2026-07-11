@@ -5,6 +5,7 @@ import '../../core/widgets/toast.dart';
 import '../../core/widgets/widgets.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
+
 class FichePointScreen extends StatelessWidget {
   const FichePointScreen({super.key});
 
@@ -32,7 +33,10 @@ class FichePointScreen extends StatelessWidget {
                     top: 12,
                     left: 20,
                     child: IconBtn(
-                      onTap: traceCallback("fiche_point_screen.dart:34:onTap", () => context.pop()),
+                      onTap: traceCallback(
+                        "fiche_point_screen.dart:34:onTap",
+                        () => context.pop(),
+                      ),
                       icon: Icons.arrow_back_ios_new,
                     ),
                   ),
@@ -138,7 +142,10 @@ class FichePointScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: OutlinedButton(
-                          onPressed: traceCallback("fiche_point_screen.dart:140:onPressed", () => context.push('/signalement')),
+                          onPressed: traceCallback(
+                            "fiche_point_screen.dart:140:onPressed",
+                            () => context.push('/signalement'),
+                          ),
                           child: const Text('Signaler un problème'),
                         ),
                       ),
@@ -147,6 +154,7 @@ class FichePointScreen extends StatelessWidget {
                         child: ElevatedButton(
                           onPressed: () {
                             showToast(context, 'Itinéraire ouvert');
+                            context.push('/carte');
                           },
                           child: const Text('Itinéraire'),
                         ),

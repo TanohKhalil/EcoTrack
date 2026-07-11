@@ -5,6 +5,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../../core/services/voice_store.dart';
+import '../../core/services/ai_analysis_service.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
 
@@ -73,7 +74,9 @@ class _AssistantVocalScreenState extends State<AssistantVocalScreen>
           VoiceStore.lastText = _lastWords;
         });
       },
-      listenFor: const Duration(seconds: 30),
+      listenOptions: stt.SpeechListenOptions(
+        listenFor: const Duration(seconds: 30),
+      ),
     );
   }
 

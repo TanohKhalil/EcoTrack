@@ -28,9 +28,7 @@ class ConfirmationCommandeScreen extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: accentColor.withValues(alpha: 0.14),
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: accentColor.withValues(alpha: 0.4),
-                  ),
+                  border: Border.all(color: accentColor.withValues(alpha: 0.4)),
                 ),
                 child: const Icon(
                   Icons.check,
@@ -66,7 +64,7 @@ class ConfirmationCommandeScreen extends ConsumerWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     ref.read(cartProvider.notifier).clear();
-                    context.push('/marketplace');
+                    context.go('/marketplace');
                   },
                   child: const Text('Retour à la marketplace'),
                 ),

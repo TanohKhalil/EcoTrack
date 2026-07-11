@@ -1,11 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/toast.dart';
 import '../../core/widgets/widgets.dart';
+import '../../providers/auth_provider.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
-class ConnexionScreen extends StatelessWidget {
+
+class ConnexionScreen extends ConsumerStatefulWidget {
   const ConnexionScreen({super.key});
+
+  @override
+  ConsumerState<ConnexionScreen> createState() => _ConnexionScreenState();
+}
+
+class _ConnexionScreenState extends ConsumerState<ConnexionScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleSignIn() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      showToast(context, 'Veuillez renseigner email et mot de passe');
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    String? errorMsg;
+    try {
+      final response = await ref
+          .read(authActionsProvider)
+          .signIn(email, password);
+      if (!mounted) return;
+      final success =
+          response.user != null || response.session?.accessToken != null;
+      if (success) {
+        context.go('/');
+        return;
+      }
+      errorMsg = 'Échec de la connexion. Vérifiez vos identifiants.';
+    } on AuthException catch (e) {
+      errorMsg = e.message;
+    } catch (e) {
+      errorMsg = 'Échec de la connexion. Vérifiez vos identifiants.';
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        if (errorMsg != null) showToast(context, errorMsg);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +81,10 @@ class ConnexionScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: traceCallback("connexion_screen.dart:27:onTap", () => context.pop()),
+                onTap: traceCallback(
+                  "connexion_screen.dart:27:onTap",
+                  () => context.pop(),
+                ),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 44),
@@ -62,11 +121,11 @@ class ConnexionScreen extends StatelessWidget {
               const Eyebrow(text: 'TÉLÉPHONE OU EMAIL'),
               const SizedBox(height: 8),
               TextField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   hintText: 'aya@exemple.ci',
-                  hintStyle: TextStyle(
-                    color: textColor.withValues(alpha: 0.5),
-                  ),
+                  hintStyle: TextStyle(color: textColor.withValues(alpha: 0.5)),
                   filled: true,
                   fillColor: cardColor,
                   border: OutlineInputBorder(
@@ -85,8 +144,10 @@ class ConnexionScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(13),
                     borderSide: BorderSide(color: accentColor),
                   ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 15,
+                  ),
                 ),
                 style: TextStyle(
                   fontSize: 14,
@@ -99,12 +160,11 @@ class ConnexionScreen extends StatelessWidget {
               const Eyebrow(text: 'MOT DE PASSE'),
               const SizedBox(height: 8),
               TextField(
+                controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   hintText: '••••••••',
-                  hintStyle: TextStyle(
-                    color: textColor.withValues(alpha: 0.5),
-                  ),
+                  hintStyle: TextStyle(color: textColor.withValues(alpha: 0.5)),
                   filled: true,
                   fillColor: cardColor,
                   border: OutlineInputBorder(
@@ -123,8 +183,10 @@ class ConnexionScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(13),
                     borderSide: BorderSide(color: accentColor),
                   ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 15,
+                  ),
                 ),
                 style: TextStyle(
                   fontSize: 14,
@@ -137,7 +199,10 @@ class ConnexionScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
-                  onTap: traceCallback("connexion_screen.dart:139:onTap", () => context.push('/mdp_oublie')),
+                  onTap: traceCallback(
+                    "connexion_screen.dart:139:onTap",
+                    () => context.push('/mdp_oublie'),
+                  ),
                   child: Text(
                     'Mot de passe oublié ?',
                     style: TextStyle(
@@ -153,8 +218,14 @@ class ConnexionScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: traceCallback("connexion_screen.dart:155:onPressed", () => context.push('/accueil_menage')),
-                  child: const Text('Se connecter →'),
+                  onPressed: _isLoading ? null : () => _handleSignIn(),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Se connecter →'),
                 ),
               ),
               const SizedBox(height: 16),
@@ -171,7 +242,10 @@ class ConnexionScreen extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: traceCallback("connexion_screen.dart:173:onTap", () => context.push('/inscription')),
+                    onTap: traceCallback(
+                      "connexion_screen.dart:173:onTap",
+                      () => context.push('/inscription'),
+                    ),
                     child: Text(
                       'S\'inscrire',
                       style: TextStyle(

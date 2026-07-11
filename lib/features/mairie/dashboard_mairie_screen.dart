@@ -155,6 +155,11 @@ class DashboardMairieScreen extends StatelessWidget {
               OutlinedButton(
                 onPressed: () {
                   showToast(context, 'Génération du rapport PDF en cours…');
+                  Future.delayed(const Duration(milliseconds: 500), () {
+                    if (context.mounted) {
+                      context.push('/impact_carbone');
+                    }
+                  });
                 },
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),

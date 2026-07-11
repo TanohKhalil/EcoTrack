@@ -5,6 +5,7 @@ import '../../core/widgets/widgets.dart';
 import '../../core/widgets/toast.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
+
 class RetraitCollecteurScreen extends StatefulWidget {
   const RetraitCollecteurScreen({super.key});
 
@@ -33,7 +34,10 @@ class _RetraitCollecteurScreenState extends State<RetraitCollecteurScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: traceCallback("retrait_collecteur_screen.dart:35:onTap", () => context.pop()),
+                onTap: traceCallback(
+                  "retrait_collecteur_screen.dart:35:onTap",
+                  () => context.pop(),
+                ),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 22),
@@ -135,11 +139,16 @@ class _RetraitCollecteurScreenState extends State<RetraitCollecteurScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
+                    final navigator = Navigator.of(context);
                     showToast(
                       context,
                       'Retrait initié — vous recevrez un SMS de confirmation',
                     );
-                    context.pop();
+                    Future.delayed(const Duration(milliseconds: 600), () {
+                      if (mounted) {
+                        navigator.pop();
+                      }
+                    });
                   },
                   child: const Text('Retirer maintenant'),
                 ),
@@ -157,7 +166,10 @@ class _RetraitCollecteurScreenState extends State<RetraitCollecteurScreen> {
     final accentColor = isDark ? AppTheme.accent : AppTheme.accentLight;
 
     return GestureDetector(
-      onTap: traceCallback("retrait_collecteur_screen.dart:159:onTap", () => setState(() => _selectedMethod = value)),
+      onTap: traceCallback(
+        "retrait_collecteur_screen.dart:159:onTap",
+        () => setState(() => _selectedMethod = value),
+      ),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
         decoration: BoxDecoration(

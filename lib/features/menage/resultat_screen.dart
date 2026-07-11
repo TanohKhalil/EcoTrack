@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
+import '../../core/services/ai_analysis_service.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
+
 class ResultatScreen extends StatelessWidget {
-  const ResultatScreen({super.key});
+  const ResultatScreen({super.key, this.result});
+
+  final AiClassificationResult? result;
 
   @override
   Widget build(BuildContext context) {
+    final aiResult =
+        result ??
+        AiAnalysisService.buildResultFromInput(userText: 'déchet détecté');
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? AppTheme.bg : AppTheme.bgLight;
     final textColor = isDark ? AppTheme.text : AppTheme.textLight;
@@ -16,6 +23,13 @@ class ResultatScreen extends StatelessWidget {
     final organicColor = isDark ? AppTheme.organic : AppTheme.organicLight;
     final goldColor = isDark ? AppTheme.gold : AppTheme.goldLight;
     final cardColor = isDark ? AppTheme.card : AppTheme.cardLight;
+    final eyebrowColor = aiResult.category.contains('ORGANIQUE')
+        ? AppTheme.organic
+        : aiResult.category.contains('PLASTIQUE')
+        ? AppTheme.plastic
+        : aiResult.category.contains('MÉTAL')
+        ? AppTheme.gold
+        : accentColor;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -45,7 +59,10 @@ class ResultatScreen extends StatelessWidget {
                       top: 8,
                       left: 22,
                       child: IconBtn(
-                        onTap: traceCallback("resultat_screen.dart:47:onTap", () => context.pop()),
+                        onTap: traceCallback(
+                          "resultat_screen.dart:47:onTap",
+                          () => context.pop(),
+                        ),
                         icon: Icons.arrow_back_ios_new,
                         color: textColor,
                       ),
@@ -66,7 +83,7 @@ class ResultatScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             Text(
-                              '91%',
+                              '${aiResult.confidence}%',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,
@@ -111,14 +128,10 @@ class ResultatScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Eyebrow(
-                            text: 'ORGANIQUE · COMPOSTABLE',
-                            color: AppTheme.organic,
-                          ),
+                          Eyebrow(text: aiResult.category, color: eyebrowColor),
                           const SizedBox(height: 6),
                           Text(
-                            'Épluchures & résidus\n'
-                            'alimentaires',
+                            '${aiResult.detail}\n',
                             style: TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.w600,
@@ -170,7 +183,7 @@ class ResultatScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Unité de compost · Yopougon',
+                                  aiResult.recommendation,
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -179,7 +192,7 @@ class ResultatScreen extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  '1,8 km · dépôt sous 24h recommandé',
+                                  aiResult.distance,
                                   style: TextStyle(
                                     fontSize: 11.5,
                                     fontWeight: FontWeight.w400,
@@ -197,7 +210,10 @@ class ResultatScreen extends StatelessWidget {
                     const Eyebrow(text: 'POINT DE DÉPÔT LE PLUS PROCHE'),
                     const SizedBox(height: 11),
                     GestureDetector(
-                      onTap: traceCallback("resultat_screen.dart:199:onTap", () => context.push('/carte')),
+                      onTap: traceCallback(
+                        "resultat_screen.dart:199:onTap",
+                        () => context.push('/carte'),
+                      ),
                       child: Container(
                         padding: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
@@ -228,7 +244,7 @@ class ResultatScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Bac communautaire — Rue 12',
+                                    aiResult.depositPoint,
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
@@ -293,7 +309,7 @@ class ResultatScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '+ 25 points gagnés',
+                                  '+ ${aiResult.points} points gagnés',
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w700,
@@ -302,7 +318,7 @@ class ResultatScreen extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  'Impact cumulé : 38 kg valorisés ce mois-ci',
+                                  'Impact cumulé : ${aiResult.impactKg} kg valorisés ce mois-ci',
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400,
@@ -321,14 +337,20 @@ class ResultatScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: OutlinedButton(
-                            onPressed: traceCallback("resultat_screen.dart:323:onPressed", () => context.push('/signalement')),
+                            onPressed: traceCallback(
+                              "resultat_screen.dart:323:onPressed",
+                              () => context.push('/signalement'),
+                            ),
                             child: const Text('Signaler un dépôt'),
                           ),
                         ),
                         const SizedBox(width: 11),
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: traceCallback("resultat_screen.dart:330:onPressed", () => context.push('/accueil_menage')),
+                            onPressed: traceCallback(
+                              "resultat_screen.dart:330:onPressed",
+                              () => context.push('/accueil_menage'),
+                            ),
                             child: const Text('Terminer'),
                           ),
                         ),
@@ -336,7 +358,10 @@ class ResultatScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 14),
                     GestureDetector(
-                      onTap: traceCallback("resultat_screen.dart:338:onTap", () => context.push('/vote_communautaire')),
+                      onTap: traceCallback(
+                        "resultat_screen.dart:338:onTap",
+                        () => context.push('/vote_communautaire'),
+                      ),
                       child: Center(
                         child: Text(
                           'Classification incorrecte ? Aider à corriger',

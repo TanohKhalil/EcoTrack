@@ -70,7 +70,7 @@ class ErreurReseauScreen extends StatelessWidget {
               const SizedBox(height: 11),
               OutlinedButton(
                 onPressed: () {
-                  // toggleOffline
+                  showToast(context, 'Mode hors-ligne activé');
                   context.push('/accueil_menage');
                 },
                 style: OutlinedButton.styleFrom(

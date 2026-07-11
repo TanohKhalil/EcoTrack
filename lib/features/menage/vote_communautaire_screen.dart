@@ -4,6 +4,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
+
 class VoteCommunautaireScreen extends StatefulWidget {
   const VoteCommunautaireScreen({super.key});
 
@@ -33,12 +34,17 @@ class _VoteCommunautaireScreenState extends State<VoteCommunautaireScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: traceCallback("vote_communautaire_screen.dart:35:onTap", () => context.pop()),
+                onTap: traceCallback(
+                  "vote_communautaire_screen.dart:35:onTap",
+                  () => context.pop(),
+                ),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 22),
               const Eyebrow(
-                  text: 'Confiance IA faible · 54%', color: AppTheme.gold),
+                text: 'Confiance IA faible · 54%',
+                color: AppTheme.gold,
+              ),
               const SizedBox(height: 8),
               Text(
                 'Aidez-nous à trancher',
@@ -89,7 +95,16 @@ class _VoteCommunautaireScreenState extends State<VoteCommunautaireScreen> {
                 ),
               const Spacer(),
               OutlinedButton(
-                onPressed: traceCallback("vote_communautaire_screen.dart:91:onPressed", () => context.pop()),
+                onPressed: traceCallback(
+                  "vote_communautaire_screen.dart:91:onPressed",
+                  () {
+                    if (_voted) {
+                      context.pop();
+                    } else {
+                      setState(() => _voted = true);
+                    }
+                  },
+                ),
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),
                 ),

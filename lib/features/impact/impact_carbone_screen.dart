@@ -6,6 +6,7 @@ import '../../core/widgets/toast.dart';
 import '../../core/constants/mock_data.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
+
 class ImpactCarboneScreen extends StatelessWidget {
   const ImpactCarboneScreen({super.key});
 
@@ -27,7 +28,10 @@ class ImpactCarboneScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconBtn(
-                onTap: traceCallback("impact_carbone_screen.dart:29:onTap", () => context.pop()),
+                onTap: traceCallback(
+                  "impact_carbone_screen.dart:29:onTap",
+                  () => context.pop(),
+                ),
                 icon: Icons.arrow_back_ios_new,
               ),
               const SizedBox(height: 22),
@@ -211,6 +215,11 @@ class ImpactCarboneScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     showToast(context, 'Certificat carbone exporté');
+                    Future.delayed(const Duration(milliseconds: 500), () {
+                      if (context.mounted) {
+                        context.push('/historique');
+                      }
+                    });
                   },
                   child: const Text('Exporter le certificat'),
                 ),

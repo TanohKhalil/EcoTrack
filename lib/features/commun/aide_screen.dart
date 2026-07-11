@@ -5,6 +5,7 @@ import '../../core/widgets/toast.dart';
 import '../../core/widgets/widgets.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
+
 class AideScreen extends StatelessWidget {
   const AideScreen({super.key});
 
@@ -27,7 +28,10 @@ class AideScreen extends StatelessWidget {
               Row(
                 children: [
                   IconBtn(
-                    onTap: traceCallback("aide_screen.dart:29:onTap", () => context.pop()),
+                    onTap: traceCallback(
+                      "aide_screen.dart:29:onTap",
+                      () => context.pop(),
+                    ),
                     icon: Icons.arrow_back_ios_new,
                   ),
                   const SizedBox(width: 12),
@@ -102,7 +106,13 @@ class AideScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
+                    final navigator = Navigator.of(context);
                     showToast(context, 'Message envoyé au support EcoTrack');
+                    Future.delayed(const Duration(milliseconds: 600), () {
+                      if (navigator.context.mounted) {
+                        navigator.pop();
+                      }
+                    });
                   },
                   child: const Text('Envoyer'),
                 ),

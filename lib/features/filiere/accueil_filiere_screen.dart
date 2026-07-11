@@ -5,6 +5,7 @@ import '../../core/widgets/toast.dart';
 import '../../core/widgets/widgets.dart';
 
 import 'package:ecotrack/core/utils/trace.dart';
+
 class AccueilFiliereScreen extends StatelessWidget {
   const AccueilFiliereScreen({super.key});
 
@@ -29,7 +30,10 @@ class AccueilFiliereScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconBtn(
-                    onTap: traceCallback("accueil_filiere_screen.dart:31:onTap", () => context.pop()),
+                    onTap: traceCallback(
+                      "accueil_filiere_screen.dart:31:onTap",
+                      () => context.pop(),
+                    ),
                     icon: Icons.arrow_back_ios_new,
                   ),
                   Container(
@@ -132,10 +136,14 @@ class AccueilFiliereScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
+                    final router = GoRouter.of(context);
                     showToast(
                       context,
                       'Lot réservé — le collecteur sera notifié',
                     );
+                    Future.delayed(const Duration(milliseconds: 600), () {
+                      router.push('/marketplace');
+                    });
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: organicColor,
@@ -146,7 +154,10 @@ class AccueilFiliereScreen extends StatelessWidget {
               ),
               const SizedBox(height: 11),
               OutlinedButton(
-                onPressed: traceCallback("accueil_filiere_screen.dart:148:onPressed", () => context.push('/marketplace')),
+                onPressed: traceCallback(
+                  "accueil_filiere_screen.dart:148:onPressed",
+                  () => context.push('/marketplace'),
+                ),
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),
                 ),
