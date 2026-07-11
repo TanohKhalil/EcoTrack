@@ -16,6 +16,7 @@ class InscriptionScreen extends StatefulWidget {
 
 class _InscriptionScreenState extends State<InscriptionScreen> {
   String _method = 'tel';
+  bool _isLoading = false;
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -358,47 +359,61 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () async {
-                    final ctx = context;
-                    if (_method == 'tel') {
-                      showToast(
-                        ctx,
-                        'Inscription par téléphone bientôt disponible',
-                      );
-                      return;
-                    }
-                    final email = _emailController.text.trim();
-                    final password = _passwordController.text.trim();
-                    debugPrint(
-                      'Inscription: email=$email passwordSet=${password.isNotEmpty}',
-                    );
-                    if (email.isEmpty || password.isEmpty) {
-                      showToast(
-                        ctx,
-                        'Veuillez renseigner email et mot de passe',
-                      );
-                      return;
-                    }
-                    try {
-                      await SupabaseService.sendSignUpOtp(email);
-                      debugPrint('Supabase OTP envoyé pour $email');
-                      if (ctx.mounted) {
-                        ctx.push(
-                          '/verification_email_otp',
-                          extra: {'email': email},
-                        );
-                      }
-                    } catch (e) {
-                      debugPrint('Erreur sendSignUpOtp: $e');
-                      if (ctx.mounted) {
-                        showToast(
-                          ctx,
-                          'Erreur lors de l\'envoi du code : ${e.toString()}',
-                        );
-                      }
-                    }
-                  },
-                  child: const Text('Vérifier et continuer →'),
+                  onPressed: _isLoading
+                      ? null
+                      : () async {
+                          final ctx = context;
+                          if (_method == 'tel') {
+                            showToast(
+                              ctx,
+                              'Inscription par téléphone bientôt disponible',
+                            );
+                            return;
+                          }
+                          final email = _emailController.text.trim();
+                          final password = _passwordController.text.trim();
+                          debugPrint(
+                            'Inscription: email=$email passwordSet=${password.isNotEmpty}',
+                          );
+                          if (email.isEmpty || password.isEmpty) {
+                            showToast(
+                              ctx,
+                              'Veuillez renseigner email et mot de passe',
+                            );
+                            return;
+                          }
+                          setState(() => _isLoading = true);
+                          try {
+                            await SupabaseService.sendSignUpOtp(email);
+                            debugPrint('Supabase OTP envoyé pour $email');
+                            if (ctx.mounted) {
+                              ctx.push(
+                                '/verification_email_otp',
+                                extra: {'email': email},
+                              );
+                            }
+                          } catch (e) {
+                            debugPrint('Erreur sendSignUpOtp: $e');
+                            if (ctx.mounted) {
+                              showToast(
+                                ctx,
+                                'Erreur lors de l\'envoi du code : ${e.toString()}',
+                              );
+                            }
+                          } finally {
+                            if (mounted) setState(() => _isLoading = false);
+                          }
+                        },
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text('Vérifier et continuer →'),
                 ),
               ),
               const SizedBox(height: 16),
